@@ -45,4 +45,3 @@ cantidadCapturados() :-
 
 
 inicial(X,Y) :- assert(estado(X,Y,))
-
