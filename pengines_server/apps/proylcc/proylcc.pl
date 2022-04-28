@@ -16,3 +16,36 @@ flick(Grid, Color, FGrid):-
 	Color \= X,
 	FGrid = [[Color|Xs]|Fs].
 
+
+% obtener el color de una posicion
+getPosicion(Grid,X,Y, Color) :- 
+
+
+% setear color a una posicion especifica
+setColor(Grid,X,Y,Color) :-
+
+%
+mismoColor(X,X).
+
+%  recibe la grilla y la lista de adyacentes
+%  retorna la grilla con los colores actualizados
+actualizarGrilla(Grid, Ady, NewGrid) :-
+
+
+% 
+adyacentes(Grid, [X,Y], ListaAdy) :-
+
+% 
+adyacentesC(X,Y) :-
+
+adyacentesC*() :-
+
+% longitud de adyacentesC
+cantidadCapturados() :-
+
+
+inicial(X,Y) :- assert(estado(X,Y,))
+
+
+
+
