@@ -17,8 +17,8 @@ flick(Grid, Color, FGrid):-
 	FGrid = [[Color|Xs]|Fs].
 
 % obtener el color de una posicion
-get(Grid,Px,Py,L):- nth0(Px,Grid,X), getY(X,Py,L).
-getY(X,Py,L):- nth0(Py,X,L). 
+get(Grid,Px,Py,C):- nth0(Px,Grid,X), getY(X,Py,C).
+getY(X,Py,C):- nth0(Py,X,C). 
 
 
 % setear color a una posicion especifica
