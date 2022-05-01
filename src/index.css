@@ -57,3 +57,24 @@ body {
   grid-template-columns: repeat(14, 40px);
   grid-template-rows: repeat(14, 40px);
 }
+
+
+
+.miBoton{
+/* LINEAS COMENTADAS NO SE BIEN PARA QUE SIRVEN 
+PERO POR SI LLEGA A DAR PROBLEMAS HAY QUE PROBAR*/
+
+  /*margin: 0px;*/
+  display: grid;
+  grid-template-columns: repeat(14, 2px);
+  grid-template-rows: repeat(14, 3px);
+
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  /* overflow: hidden; */
+ /* outline: none;*/ 
+
+ font-size: 40px;
+
+}
