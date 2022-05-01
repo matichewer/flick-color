@@ -24,12 +24,73 @@ reemplazarEnLista(Pos, Lista, NewElement, NewList) :-
 get(Grid,Px,Py,C):- nth0(Px,Grid,X), getY(X,Py,C).
 getY(X,Py,C):- nth0(Py,X,C). 
 
-
-% setear color a una posicion especifica
-setColor(Grid,X,Y,Color) :-
-
 %
 mismoColor(X,X).
+
+
+
+% obtener adyacentes de las ESQUINAS
+obtenerAdyacentes(0,0,L):-
+    		insertar([1,0],[], L1),
+    		insertar([0,1],L1, L).
+
+obtenerAdyacentes(13,13,L):-
+    		insertar([12,13],[], L1),
+    		insertar([13,12],L1, L).
+
+obtenerAdyacentes(0,13,L):-
+    		insertar([0,12],[], L1),
+    		insertar([1,13],L1, L).
+
+obtenerAdyacentes(13,0,L):-
+    		insertar([12,0],[], L1),
+    		insertar([13,1],L1, L).
+  
+% obtener adyacentes de las PAREDES
+obtenerAdyacentes(0,Y,L):-
+    		Y>0, Y<13,
+    		W is Y-1,
+    		insertar([0, W],[], L1),
+    		Z is Y+1,
+    		insertar([0, Z],L1, L2),    		
+    		insertar([1, Y],L2, L).
+
+obtenerAdyacentes(X,0,L):-
+    		X>0, X<13,
+    		W is X-1,
+    		insertar([W, 0],[], L1),
+    		Z is X+1,
+    		insertar([Z, 0],L1, L2),
+    		insertar([1, X],L2, L).
+
+obtenerAdyacentes(13,Y,L):-
+    		Y>0, Y<13,
+    		W is Y-1,
+    		insertar([13, Y],[], L1),
+    		insertar([13, W],L1, L2),
+    		Z is Y+1,
+    		insertar([12, Z],L2, L).
+
+obtenerAdyacentes(X,13,L):-
+    		X>0, X<13,
+    		W is X-1,
+    		insertar([W, 13],[], L1),
+    		insertar([X, 12],L1, L2),
+    		Z is X+1,
+    		insertar([Z, 13],L2, L).
+
+% obtener adyacentes GENERAL
+obtenerAdyacentes(X, Y, L):-
+    		X>0, X<13, Y>0, Y<13,
+    		W is X-1,
+    		insertar([W, Y],[], L1),
+    		insertar([Y, W],L1, L2),
+    		Z is X+1,
+    		insertar([Z, Y],L2, L3),
+    		insertar([Y, Z],L3, L).
+    
+
+
 
 %  recibe la grilla y la lista de adyacentes
 %  retorna la grilla con los colores actualizados
