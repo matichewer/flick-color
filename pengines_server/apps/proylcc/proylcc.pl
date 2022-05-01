@@ -1,6 +1,6 @@
 :- module(proylcc, 
 	[  
-		flick/3
+		flick/5
 	]).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -9,12 +9,16 @@
 %
 % FGrid es el resultado de hacer 'flick' de la grilla Grid con el color Color.
 % Retorna false si Color coincide con el color de la celda superior izquierda de la grilla. 
+flick(Grid,X,Y,Color, NewGrid):- 
+    		nth0(X,Grid,Lista),
+    		reemplazarEnLista(Y, Lista, Color, NewList),
+    		reemplazarEnLista(X, Grid, NewList, NewGrid).
 
-flick(Grid, Color, FGrid):-
-	Grid = [F|Fs],
-	F = [X|Xs],
-	Color \= X,
-	FGrid = [[Color|Xs]|Fs].
+% Dada una Lista, reemplaza el elemento por un NewElement. Retorna la NewList modificada
+reemplazarEnLista(Pos, Lista, NewElement, NewList) :-
+            nth0(Pos, Lista, _, R),
+            nth0(Pos, NewList, NewElement, R).	
+
 
 % obtener el color de una posicion
 get(Grid,Px,Py,C):- nth0(Px,Grid,X), getY(X,Py,C).
