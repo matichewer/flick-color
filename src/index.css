@@ -76,5 +76,8 @@ PERO POR SI LLEGA A DAR PROBLEMAS HAY QUE PROBAR*/
  /* outline: none;*/ 
 
  font-size: 40px;
-
+}
+.miBoton:hover {
+  outline: none;
+  border: 2px solid black;
 }
