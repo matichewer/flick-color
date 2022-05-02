@@ -24,11 +24,6 @@ reemplazarEnLista(Pos, Lista, NewElement, NewList) :-
 get(Grid,Px,Py,C):- nth0(Px,Grid,X), getY(X,Py,C).
 getY(X,Py,C):- nth0(Py,X,C). 
 
-%
-mismoColor(X,X).
-
-
-
 % obtener adyacentes de las ESQUINAS
 obtenerAdyacentes(0,0,L):-
     		insertar([1,0],[], L1),
@@ -90,6 +85,32 @@ obtenerAdyacentes(X, Y, L):-
     		insertar([Y, Z],L3, L).
     
 
+% PREDICADOS PARA LA FINALIZACIÓN DEL JUEGO
+
+% chequea que 2 colores sean iguales
+mismoColor(X,X).
+
+% dada una lista y un elemento X
+% retorna true si todos los elementos son iguales al elemento X
+%		  falso en caso contrario		 
+todosIgualAlElementoX([], _X, true).
+todosIgualAlElementoX([Elem|Lista], X, R):-
+    					mismoColor(Elem,X),
+    					todosIgualAlElementoX(Lista, X, R).
+
+% recibe una lista
+% retorna true si todos sus elementos son iguales
+% 		  falso en contrario
+todosLosElementosIguales([Elem1|Lista], R):-
+    					nth0(1,Lista,Elem2), % obtengo segundo elemento
+    					mismoColor(Elem1,Elem2), % los comparo
+    					todosIgualAlElementoX(Lista, Elem1, R).
+
+% chequea que todos los elementos de la grilla sean del mismo color
+checkFinish(Grid, R):- 
+    					nth0(0,Grid,L1),
+    					todosLosElementosIguales(L1,R),
+    					todosIgualAlElementoX(Grid,L1,R).
 
 
 %  recibe la grilla y la lista de adyacentes
@@ -112,23 +133,7 @@ cantidadCapturados() :-
 inicial(X,Y) :- assert(estado(X,Y,))
 
 
-% COMMIT EN CLASE DIA 29-04-2022
-% consulta de nth/3
-% devuelve la fila 1
-nth0(1,[
-		 [y,g,b,g,v,y,p,v,b,p,v,p,v,r],
-		 [r,r,p,p,g,v,v,r,r,b,g,v,p,r],
-		 [b,v,g,y,b,g,r,g,p,g,p,r,y,y],
-		 [r,p,y,y,y,p,y,g,r,g,y,v,y,p],
-		 [y,p,y,v,y,g,g,v,r,b,v,y,r,g],
-		 [r,b,v,g,b,r,y,p,b,p,y,r,y,y],
-		 [p,g,v,y,y,r,b,r,v,r,v,y,p,y],
-		 [b,y,v,g,r,v,r,g,b,y,b,y,p,g],
-		 [r,b,b,v,g,v,p,y,r,v,r,y,p,g],
-		 [v,b,g,v,v,r,g,y,b,b,b,b,r,y],
-		 [v,v,b,r,p,b,g,g,p,p,b,y,v,p],
-		 [r,p,g,y,v,y,r,b,v,r,b,y,r,v],
-		 [r,b,b,v,p,y,p,r,b,g,p,y,b,r],
-		 [v,g,p,b,v,v,g,g,g,b,v,g,g,g]
-		 ], X).
+
+
+
 
