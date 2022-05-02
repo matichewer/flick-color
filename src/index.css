@@ -81,3 +81,19 @@ PERO POR SI LLEGA A DAR PROBLEMAS HAY QUE PROBAR*/
   outline: none;
   border: 2px solid black;
 }
+.capturados {
+  display:flex;
+  align-items: center;
+  color: red;
+  flex-direction: column;
+  margin: 20px;
+}
+.Historial{
+  display:flex;
+  /*align-items: center;*/
+  color: black;
+  flex-direction: line;
+  margin-top: 40px;
+  font-size: 40px;
+  margin: 20px;
+}

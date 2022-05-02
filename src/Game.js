@@ -99,6 +99,7 @@ class Game extends React.Component {
     }
     return (
       <div className="game">
+         <div className="PanelControl">
         <div className="leftPanel">
           <div className="buttonsPanel">
             {colors.map(color =>
@@ -114,7 +115,15 @@ class Game extends React.Component {
             <div className="turnsNum">{this.state.turns}</div>
           </div>
         </div>
+        <div className="capturados">
+          <div className="capturadosLab">Cantidad capturados</div>
+          <div className="CapturadosNum">{this.state.turns}</div>
+            </div> 
+        </div>
         <Board grid={this.state.grid} />
+        <div className="Historial">
+          <div className="HistorialLab">Historial</div>
+        </div> 
       </div>
     );
   }
