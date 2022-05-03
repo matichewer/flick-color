@@ -14,10 +14,20 @@ flick(Grid,X,Y,Color, NewGrid):-
     		reemplazarEnLista(Y, Lista, Color, NewList),
     		reemplazarEnLista(X, Grid, NewList, NewGrid).
 
-% Dada una Lista, reemplaza el elemento por un NewElement. Retorna la NewList modificada
-reemplazarEnLista(Pos, Lista, NewElement, NewList) :-
-            nth0(Pos, Lista, _, R),
-            nth0(Pos, NewList, NewElement, R).	
+% dada una Lista y un Indice,
+% busca el elemento y lo reemplaza por NewElement 
+% retorna una lista NewList con el elemento reemplazado
+reemplazarEnLista(Indice, Lista, NewElement, NewList) :-
+            nth0(Indice, Lista, _, R),
+            nth0(Indice, NewList, NewElement, R).	
+
+% dada una grilla Grid y una posicion (X,Y)
+% busca el color y lo reemplaza por NewElement
+% retorna la grilla NewGrid con el elemento reemplazado
+reemplazarEnGrilla(Grid,[X,Y],NewElement,NewGrid):- 
+			nth0(X,Grid,Fila), 
+			reemplazarEnLista(Y,Fila,NewElement,NewFila), % A REVISAR
+			reemplazarEnLista(X, Grid, NewFila, NewGrid).
 
 
 % dada una grilla Grid, obtiene el color C de una posicion (X,Y)
@@ -86,24 +96,9 @@ obtenerAdyacentes(X, Y, L):-
     		insertar([Y, Z],L3, L).
     
 	
-
-% reemplaza el color en una grilla Grid, en la posición X,Y
-% por el color pasado por parámetro.
-% retorna la nueva grilla con el color modificado
-replace(Grid,[X,Y],Color,NewGrid):- 
-                  nth0(X,Grid, Fila), 
-                  reemplazarElem(Y,Fila,Color,NewFila), % A REVISAR
-                  reemplazarElem(X, Grid, NewFila, NewGrid).
-
-reemplazarElem(Indice,Lista,Elem,R):-  
-                  nth0(Indice,Lista,_,R1), 
-                  nth0(Indice,R,Elem,R1).
-
-
-
-
-% PREDICADOS PARA LA FINALIZACIÓN DEL JUEGO
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% INICIO PREDICADOS PARA LA FINALIZACIÓN DEL JUEGO %%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % chequea que 2 colores sean iguales
 mismoColor(X,X).
@@ -130,11 +125,19 @@ checkFinish(Grid, R):-
     					todosLosElementosIguales(L1,R),
     					todosIgualAlElementoX(Grid,L1,R).
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% FIN PREDICADOS PARA LA FINALIZACIÓN DEL JUEGO %%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+% DE ACÁ PARA ABAJO SON LOS PREDICADOS QUE NOS FALTAN HACER
 
 %  recibe la grilla y la lista de adyacentes
 %  retorna la grilla con los colores actualizados
 actualizarGrilla(Grid, Ady, NewGrid) :-
-
 
 % 
 adyacentes(Grid, [X,Y], ListaAdy) :-
