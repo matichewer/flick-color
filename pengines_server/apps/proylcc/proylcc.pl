@@ -20,9 +20,10 @@ reemplazarEnLista(Pos, Lista, NewElement, NewList) :-
             nth0(Pos, NewList, NewElement, R).	
 
 
-% obtener el color de una posicion
-get(Grid,Px,Py,C):- nth0(Px,Grid,X), getY(X,Py,C).
-getY(X,Py,C):- nth0(Py,X,C). 
+% dada una grilla Grid, obtiene el color C de una posicion (X,Y)
+getColor(Grid,X,Y,C):- 
+    		nth0(X,Grid,Px),
+    		nth0(Y,Px,C). 
 
 % obtener adyacentes de las ESQUINAS
 obtenerAdyacentes(0,0,L):-
