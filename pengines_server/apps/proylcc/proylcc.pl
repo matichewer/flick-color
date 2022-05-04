@@ -1,6 +1,6 @@
 :- module(proylcc, 
 	[  
-		flick/7
+		flick/6
 	]).
 	:- dynamic(celdaCapturada/2).
 
@@ -12,24 +12,24 @@ celdaCapturada(6,3).
 %
 % FGrid es el resultado de hacer 'flick' de la grilla Grid con el color Color.
 % Retorna false si Color coincide con el color de la celda superior izquierda de la grilla. 
-flick(Grid,X,Y,Color,NewGrid,CantidadCapturados,Complete):- 
+flick(Grid,X,Y,Color,NewGrid,CantidadCapturados):- 
 			%assertCeldaCapturada(X,Y,_,_), % HAY QUE REVISAR ÉSTA LINEA
 			adyacentesC(Grid,Color,NewGrid),
 			findall([A,B],celdaCapturada(A,B),ListaCapturados),
 			length(ListaCapturados,CantidadCapturados).
-			termino(CantidadCapturados,Complete).
+			%termino(CantidadCapturados,Complete).
 
 % verifica que el juego haya terminado
 %termino(196,true).
 %termino(_,false).
-termino(Cant,Fin):-
+/*termino(Cant,Fin):-
     		Cant = 196,
     		Fin is 0.
 
 termino(Cant, Fin):-
     		Cant \= 196,
     		Fin is 1.
-
+*/
 
 % dada una Lista y un Indice,
 % busca el elemento y lo reemplaza por NewElement 

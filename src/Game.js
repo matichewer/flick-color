@@ -33,7 +33,6 @@ class Game extends React.Component {
       turns: 0,
       grid: null,
       complete: false,  // true if game is complete, false otherwise
-      fin: 0,  // PODEMOS USAR ÉSTO ?? EN VEZ DE COMPLETE USAMOS FIN
       waiting: false,
       cantidadDeCapturados: 0,
     };
@@ -75,7 +74,7 @@ class Game extends React.Component {
     //        [r,b,b,v,p,y,p,r,b,g,p,y,b,r],
     //        [v,g,p,b,v,v,g,g,g,b,v,g,g,g]],r, Grid)
     const gridS = JSON.stringify(this.state.grid).replaceAll('"', "");
-    const queryS = "flick(" + gridS + ",6,3," + color + ", Grid, CantCapturados, FinDelJuego)";
+    const queryS = "flick(" + gridS + ",6,3," + color + ", Grid, CantCapturados)";
     this.setState({
       waiting: true
     });
@@ -86,11 +85,10 @@ class Game extends React.Component {
           turns: this.state.turns + 1,
           waiting: false,
           cantidadDeCapturados: response['CantCapturados'],
-          fin: response['FinDelJuego'],
+          complete: response['CantCapturados']===196
         });
-        alert(this.state.complete+" __ "+this.state.FinDelJuego+" ___ "+this.state.fin)
-        if(this.state.fin === "1"){
-          alert("GANASTEEEEEEEEEEEEEEEEE")
+        if(this.state.complete){
+          alert("¡Felicitaciones Ganaste!")
         }
       } else {
         // Prolog query will fail when the clicked color coincides with that in the top left cell.

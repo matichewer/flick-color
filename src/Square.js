@@ -15,7 +15,7 @@ class Square extends React.Component {
             <div style={{ backgroundColor: colorToCss(this.props.value) }} >
                 <button class="miBoton"
                     onClick={() => {
-                       /* this.setState({value:"X"})*/
+                       this.setState({value:"X"})
                         console.log('color: ' + this.props.value)
                     } 
                 }>{this.state.value}
