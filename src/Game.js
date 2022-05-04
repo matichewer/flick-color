@@ -88,7 +88,7 @@ class Game extends React.Component {
           complete: response['CantCapturados']===196
         });
         if(this.state.complete){
-          alert("¡Felicitaciones Ganaste!")
+          alert("Felicitaciones Ganaste!")
         }
       } else {
         // Prolog query will fail when the clicked color coincides with that in the top left cell.
