@@ -26,7 +26,7 @@ reemplazarEnLista(Indice, Lista, NewElement, NewList) :-
 % retorna la grilla NewGrid con el elemento reemplazado
 reemplazarEnGrilla(Grid,[X,Y],NewElement,NewGrid):- 
 			nth0(X,Grid,Fila), 
-			reemplazarEnLista(Y,Fila,NewElement,NewFila), % A REVISAR
+			reemplazarEnLista(Y,Fila,NewElement,NewFila),
 			reemplazarEnLista(X, Grid, NewFila, NewGrid).
 
 % inserta el elemento E al comienzo de la lista L
@@ -38,14 +38,15 @@ getColor(Grid,X,Y,C):-
     		nth0(Y,Px,C). 
 
 % obtener adyacentes de las ESQUINAS
-obtenerAdyacentes(0,0,L):-
-    		insertarEnLista([1,0],[], L1),
-    		insertarEnLista([0,1],L1, L).
+obtenerAdyacentes(Grid,[[0|[0]]|Celdas],Color):-
+    		agregarCeldaCapturada(Grid,0,1,Color),
+    		agregarCeldaCapturada(Grid,1,0,Color).
 
-obtenerAdyacentes(13,13,L):-
-    		insertarEnLista([12,13],[], L1),
-    		insertarEnLista([13,12],L1, L).
-
+% obtener adyacentes de las ESQUINAS
+obtenerAdyacentes(Grid,[[13|[13]]|Celdas],Color):-
+    		agregarCeldaCapturada(Grid,12,13,Color),
+    		agregarCeldaCapturada(Grid,13,12,Color).
+/*
 obtenerAdyacentes(0,13,L):-
     		insertarEnLista([0,12],[], L1),
     		insertar([1,13],L1, L).
@@ -97,6 +98,7 @@ obtenerAdyacentes(X, Y, L):-
     		insertarEnLista([Z, Y],L2, L3),
     		insertarEnLista([Y, Z],L3, L).
     
+*/
 	
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% INICIO PREDICADOS PARA LA FINALIZACIÓN DEL JUEGO %%%%
@@ -135,7 +137,67 @@ checkFinish(Grid, R):-
 
 
 
-% DE ACÁ PARA ABAJO SON LOS PREDICADOS QUE NOS FALTAN HACER
+% DE ACÁ PARA ABAJO SON LOS PREDICADOS QUE EN 
+% UN PRINCIPIO PENSAMOS CON NUESTRA SUPER INTELIGENCIA
+
+%____________________________________________________________________
+% Pinta todas las celdas capturadas
+pintarCapturadas(Grid,[],_Color,Grid).
+pintarCapturadas(Grid,[[X|[Y]]|Celdas],Color, NewGrid):-
+    	%getColor(Grid,X,Y,C),  % ¿NO CONTROLAMOS MISMO COLOR?
+    	%C \= Color,
+    	reemplazarEnGrilla(Grid,X,Y,Color,NewGrid1),
+		pintarCapturadas(NewGrid1,Celdas,Color,NewGrid).
+% su consulta:
+%init1(Grid),
+%findall([X,Y],celdaCapturada(X,Y),CeldasCapturadas),
+%pintarCapturadas(Grid,CeldasCapturadas,r,NewGrid).
+%____________________________________________________________________
+
+% en caso de que no exista la celda capturada, 
+% se hace un assert de dicha celda.
+assertCeldaCapturada(X,Y):-
+    	not(celdaCapturada(X,Y)),
+    	assert(celdaCapturada(X,Y)).
+assertCeldaCapturada(_,_).
+%____________________________________________________________________
+
+% dada una grilla G, si en las coordenadas (X,Y) está el color C
+% entonces se agrega dichas coordenadas a la lista L
+% y se retorna en R
+insertarCoordEnListaSiEsDelMismoColor(G,X,Y,C,L,ListaAdy):-
+    		getColor(G,X,Y,C1),
+    		mismoColor(C,C1),
+    		insertarEnLista([X,Y],L,ListaAdy).% ¿AGREGAMOS COORDS REPETIDAS??
+% dada una grilla G, si en las coordenadas (X,Y) NO está el color C
+% entonces se retorna la misma lista recibida
+insertarCoordEnListaSiEsDelMismoColor(_G,_X,_Y,_C,L,L).
+%____________________________________________________________________
+agregarCeldaCapturada(Grid,X,Y,Color):-
+    		getColor(Grid,X,Y,C1),
+    		mismoColor(Color,C1),
+    		assertCeldaCapturada(X,Y).
+agregarCeldaCapturada(_G,_X,_Y,_Color).
+%____________________________________________________________________
+%adyacente(Grid, Color):-
+    		% pintar celdas capturas de findall
+    		% 
+    		% para cada celda capturada
+    			% buscar adyacentes mismo color
+    			% agregar nuevas celdas capturadas sin repetir
+celdaCapturada(13,13).
+
+adyacentesC(Grid,Color,NewGrid):-    		
+    	% pintamos todas las celdas capturadas
+          findall([X,Y],celdaCapturada(X,Y),CeldasCapturadas),
+          pintarCapturadas(Grid,CeldasCapturadas,Color,NewGrid),
+		  % obtenerAdyacentes y agregarlos como celdas capturadas%
+		 obtenerAdyacentes(Grid,CeldasCapturadas,Color).
+%____________________________________________________________________
+
+
+
+% COSAS FEAS:
 
 %  recibe la grilla y la lista de adyacentes
 %  retorna la grilla con los colores actualizados
@@ -154,6 +216,8 @@ cantidadCapturados() :-
 
 
 inicial(X,Y) :- assert(estado(X,Y,))
+
+
 
 
 
