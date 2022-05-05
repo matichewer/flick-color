@@ -14,6 +14,8 @@ celdaCapturada(6,3).
 % Retorna false si Color coincide con el color de la celda superior izquierda de la grilla. 
 flick(Grid,X,Y,Color,NewGrid,CantidadCapturados):- 
 			%assertCeldaCapturada(X,Y,_,_), % HAY QUE REVISAR ÉSTA LINEA
+			getColor(Grid,X,Y,C1),
+			Color \= C1,
 			adyacentesC(Grid,Color,NewGrid),
 			findall([A,B],celdaCapturada(A,B),ListaCapturados),
 			length(ListaCapturados,CantidadCapturados).
