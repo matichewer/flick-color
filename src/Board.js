@@ -10,11 +10,10 @@ class Board extends React.Component {
                         <Square
                             value={cell}
                             key={i + "." + j}
-                            //onClick={() => this.props.onOriginSelected && this.props.onOriginSelected([i,j])}
-                            onClick={this.props.onOrigenSelected && (() => this.props.onOrigenSelected([i, j]))}
-
-                            //celdaOrigen={this.props.origin[0] === i && this.props.origin[1] === j}
-                            className={this.props.origen && i === this.props.origen[0] && j === this.props.origen[1] ? "celdaOrigen" : undefined}
+                            onClick={this.props.origenSeleccionado && (() => this.props.origenSeleccionado([i, j]))}
+                            className={ this.props.origen && 
+                                        i === this.props.origen[0] &&
+                                        j === this.props.origen[1] ? "celdaOrigen" : undefined}
                         />
                     )
                 )}
