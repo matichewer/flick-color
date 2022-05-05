@@ -1,6 +1,7 @@
 import React from 'react';
 import PengineClient from './PengineClient';
 import Board from './Board';
+import Square from './Square';
 
 /**
  * List of colors.
@@ -35,6 +36,7 @@ class Game extends React.Component {
       complete: false,  // true if game is complete, false otherwise
       waiting: false,
       cantidadDeCapturados: 0,
+      historial: [],
     };
     this.handleClick = this.handleClick.bind(this);
     this.handlePengineCreate = this.handlePengineCreate.bind(this);
@@ -79,17 +81,18 @@ class Game extends React.Component {
       waiting: true
     });
     this.pengine.query(queryS, (success, response) => {
+      this.state.historial.push(color)
       if (success) {
         this.setState({
           grid: response['Grid'],
           turns: this.state.turns + 1,
           waiting: false,
           cantidadDeCapturados: response['CantCapturados'],
-          complete: response['CantCapturados']===196
+          complete: response['CantCapturados']===196,
         });
         if(this.state.complete){
-          alert("Felicitaciones Ganaste!")
-        }
+          alert("Felicitaciones, Ganaste!")
+        } 
       } else {
         // Prolog query will fail when the clicked color coincides with that in the top left cell.
         this.setState({
@@ -106,29 +109,35 @@ class Game extends React.Component {
     return (
       <div className="game">
          <div className="PanelControl">
-        <div className="leftPanel">
-          <div className="buttonsPanel">
-            {colors.map(color =>
-              <button
-                className="colorBtn"
-                style={{ backgroundColor: colorToCss(color) }}
-                onClick={() => this.handleClick(color)}
-                key={color}
-              />)}
-          </div>
-          <div className="turnsPanel">
-            <div className="turnsLab">Turns</div>
-            <div className="turnsNum">{this.state.turns}</div>
-          </div>
-        </div>
-        <div className="capturados">
-          <div className="capturadosLab">Cantidad capturados</div>
-          <div className="CapturadosNum">{this.state.cantidadDeCapturados}</div>
+            <div className="leftPanel">
+              <div className="buttonsPanel">
+                {colors.map(color =>
+                  <button
+                    className="colorBtn"
+                    style={{ backgroundColor: colorToCss(color) }}
+                    onClick={() => this.handleClick(color)}
+                    key={color}
+                  />)}
+              </div>
+              <div className="turnsPanel">
+                <div className="turnsLab">Turns</div>
+                <div className="turnsNum">{this.state.turns}</div>
+              </div>
+            </div>
+            <div className="capturados">
+              <div className="capturadosLab">Cantidad capturados</div>
+              <div className="CapturadosNum">{this.state.cantidadDeCapturados}</div>
             </div> 
         </div>
         <Board grid={this.state.grid} />
         <div className="Historial">
-          <div className="HistorialLab">Historial</div>
+          <div className="HistorialLab">Historial</div>    
+              <div className="stateHistorial">{this.state.historial.map((colorS,i)=>
+                  <Square
+                  value={colorS}
+                  key={i}
+              />)}
+              </div>
         </div> 
       </div>
     );

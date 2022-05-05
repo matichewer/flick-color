@@ -77,6 +77,7 @@ PERO POR SI LLEGA A DAR PROBLEMAS HAY QUE PROBAR*/
 
  font-size: 40px;
 }
+
 .miBoton:hover {
   outline: none;
   border: 2px solid black;
@@ -92,8 +93,9 @@ PERO POR SI LLEGA A DAR PROBLEMAS HAY QUE PROBAR*/
   display:flex;
   /*align-items: center;*/
   color: black;
-  flex-direction: line;
+  flex-direction: column;
   margin-top: 40px;
   font-size: 40px;
   margin: 20px;
 }
+

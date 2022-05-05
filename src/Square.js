@@ -8,7 +8,7 @@ class Square extends React.Component {
         super(props);
         this.state = {
             value: null,
-           // botonActivo: true
+            botonActivo: true
         };        
     }
     render() {
@@ -17,7 +17,7 @@ class Square extends React.Component {
                 <button class="miBoton" disabled={!this.state.botonActivo} 
                     onClick={() => {
                         if (!this.props.botonActivo) {
-                            //this.setState({botonActivo: false})
+                            this.setState({botonActivo: false})
                             this.setState({value:"X"})
                             console.log('color: ' + this.props.value)
                         }
