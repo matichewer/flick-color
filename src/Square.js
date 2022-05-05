@@ -1,35 +1,15 @@
 import React from 'react';
 import { colorToCss } from './Game';
-//import {useState} from 'react';
+import "./index.css";
 
 class Square extends React.Component {
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            value: null,
-            botonActivo: true
-        };        
-    }
-    render() {
+      render() {
         return (
-            <div style={{ backgroundColor: colorToCss(this.props.value) }} >
-                <button class="miBoton" disabled={!this.state.botonActivo} 
-                    onClick={() => {
-                        if (!this.props.botonActivo) {
-                            this.setState({botonActivo: false})
-                            this.setState({value:"X"})
-                            console.log('color: ' + this.props.value)
-                        }
-                    } 
-                }>
-                    
-                    {this.state.value}
-                </button>
-            </div>
+            <div style={{ backgroundColor: colorToCss(this.props.value) }} 
+                onClick={this.props.onClick}
+                className={this.props.className}
+            />
         );
-
-
     }
 }
 export default Square;

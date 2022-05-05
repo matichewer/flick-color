@@ -99,3 +99,12 @@ PERO POR SI LLEGA A DAR PROBLEMAS HAY QUE PROBAR*/
   margin: 20px;
 }
 
+.celdaOrigen{
+  border: 13px solid black;
+}
+
+.squaresHistorial{
+  height: 20px;
+  width: 20px;
+
+}

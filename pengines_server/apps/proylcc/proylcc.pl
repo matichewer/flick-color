@@ -4,7 +4,7 @@
 	]).
 	:- dynamic(celdaCapturada/2).
 
-celdaCapturada(6,3).
+%celdaCapturada(6,3).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -13,7 +13,8 @@ celdaCapturada(6,3).
 % FGrid es el resultado de hacer 'flick' de la grilla Grid con el color Color.
 % Retorna false si Color coincide con el color de la celda superior izquierda de la grilla. 
 flick(Grid,X,Y,Color,NewGrid,CantidadCapturados):- 
-			%assertCeldaCapturada(X,Y,_,_), % HAY QUE REVISAR ÉSTA LINEA
+			assertCeldaCapturada(X,Y,_,_), % HAY QUE REVISAR ÉSTA LINEA
+			%agregarCeldaCapturada(6,3),
 			getColor(Grid,X,Y,C1),
 			Color \= C1,
 			adyacentesC(Grid,Color,NewGrid),
