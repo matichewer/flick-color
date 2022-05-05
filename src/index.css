@@ -43,10 +43,6 @@ body {
   color: darkblue;
 }
 
-.turnsLab {
-  text-transform: uppercase;
-}
-
 .turnsNum {
   margin-top: 10px;
 }
@@ -58,40 +54,17 @@ body {
   grid-template-rows: repeat(14, 40px);
 }
 
-
-
-.miBoton{
-/* LINEAS COMENTADAS NO SE BIEN PARA QUE SIRVEN 
-PERO POR SI LLEGA A DAR PROBLEMAS HAY QUE PROBAR*/
-
-  /*margin: 0px;*/
-  display: grid;
-  grid-template-columns: repeat(14, 1.8px);
-  grid-template-rows: repeat(14, 2.4px);
-
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  /* overflow: hidden; */
- /* outline: none;*/ 
-
- font-size: 40px;
-}
-
-.miBoton:hover {
-  outline: none;
-  border: 2px solid black;
-}
 .capturados {
   display:flex;
   align-items: center;
   color: red;
   flex-direction: column;
   margin: 20px;
+ font-size: 20px;
 }
-.Historial{
+.historial{
+  align-items: center;
   display:flex;
-  /*align-items: center;*/
   color: black;
   flex-direction: column;
   margin-top: 40px;
@@ -100,11 +73,12 @@ PERO POR SI LLEGA A DAR PROBLEMAS HAY QUE PROBAR*/
 }
 
 .celdaOrigen{
-  border: 13px solid black;
+  border: 3px solid black;
 }
 
 .squaresHistorial{
   height: 20px;
-  width: 20px;
+  width: 60px;
+  border: 1px solid black;
 
 }
