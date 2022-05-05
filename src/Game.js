@@ -23,12 +23,10 @@ export function colorToCss(color) {
     case "y": return "yellow";
     default: return color;
   }
-  //return color;
 }
 class Game extends React.Component {
 
   pengine;
-
   constructor(props) {
     super(props);
     this.state = {
@@ -37,11 +35,11 @@ class Game extends React.Component {
       complete: false,  // true if game is complete, false otherwise
       waiting: false,
       cantidadDeCapturados: 0,
-      historial: [],
-      origen: undefined,
+      historial: [], // historial de colores
+      origen: undefined, // celda de origen
     };
     this.handleClick = this.handleClick.bind(this);
-    this.onOrigenSelected = this.onOrigenSelected.bind(this);
+    this.origenSeleccionado = this.origenSeleccionado.bind(this);
     this.handlePengineCreate = this.handlePengineCreate.bind(this);
     this.pengine = new PengineClient(this.handlePengineCreate);
   }
@@ -79,24 +77,26 @@ class Game extends React.Component {
     //        [r,b,b,v,p,y,p,r,b,g,p,y,b,r],
     //        [v,g,p,b,v,v,g,g,g,b,v,g,g,g]],r, Grid)
     const gridS = JSON.stringify(this.state.grid).replaceAll('"', "");
+
+    // si el usuario no elige celda de origen, entonces por defecto es la [0,0]
     const fila = this.state.origen ? this.state.origen[0] : 0;
-    const col = this.state.origen ? this.state.origen[1] : 0;
-    //const queryS = "flick(" + gridS + ",6,3," + color + ", Grid, CantCapturados)";
-    //this.state.origen = this.state.origen ? this.setState({origen: [0,0]}) : undefined;
-    const queryS = "flick(" + gridS + "," + fila + "," + col + "," + color + ", Grid, CantCapturados)";
+    const columna = this.state.origen ? this.state.origen[1] : 0;
+
+    const queryS = "flick(" + gridS + "," + fila + "," + columna + "," + color + ", Grid, CantCapturados)";
     this.setState({
       waiting: true
     });
-    this.pengine.query(queryS, (success, response) => {
-      this.state.historial.push(color)
+    this.pengine.query(queryS, (success, response) => {      
       if (success) {
+        this.state.historial.push(color)
         this.setState({
           grid: response['Grid'],
           turns: this.state.turns + 1,
           waiting: false,
           cantidadDeCapturados: response['CantCapturados'],
-          complete: response['CantCapturados']===196,
+          complete: response['CantCapturados']===196, // complete es Verdadero si gano
         });
+        // si ganamos mostramos un aviso
         if(this.state.complete){
           alert("Felicitaciones, Ganaste!")
         } 
@@ -108,13 +108,13 @@ class Game extends React.Component {
       }
     });
   }
-
-  onOrigenSelected(pos){
+ 
+  // funcion del origen
+  origenSeleccionado(pos){
     this.setState({
       origen: pos,
     })
   }
-
 
   render() {
     if (this.state.grid === null) {
@@ -122,7 +122,7 @@ class Game extends React.Component {
     }
     return (
       <div className="game">
-         <div className="PanelControl">
+         <div className="panelControl">
             <div className="leftPanel">
               <div className="buttonsPanel">
                 {colors.map(color =>
@@ -134,22 +134,22 @@ class Game extends React.Component {
                   />)}
               </div>
               <div className="turnsPanel">
-                <div className="turnsLab">Turns</div>
+                <div className="turnsLab">Turnos</div>
                 <div className="turnsNum">{this.state.turns}</div>
               </div>
             </div>
             <div className="capturados">
-              <div className="capturadosLab">Cantidad capturados</div>
-              <div className="CapturadosNum">{this.state.cantidadDeCapturados}</div>
+              <div className="capturadosLab">Cantidad de capturados</div>
+              <div className="capturadosNum">{this.state.cantidadDeCapturados}</div>
             </div> 
         </div>
         <Board 
             grid={this.state.grid} 
             origen={this.state.origen}
-            onOrigenSelected={!this.state.origen ? this.onOrigenSelected : undefined}   
+            origenSeleccionado={!this.state.origen ? this.origenSeleccionado : undefined}   
         />
-        <div className="Historial">
-          <div className="HistorialLab">Historial</div>    
+        <div className="historial">
+          <div className="historialLab">Historial</div>    
               <div className="stateHistorial">{this.state.historial.map((colorS,i)=>
                   <Square
                     className={"squaresHistorial"}
