@@ -21,122 +21,22 @@ flick(Grid,X,Y,Color,NewGrid,CantidadCapturados):-
 			findall([A,B],celdaCapturada(A,B),ListaCapturados),
 			length(ListaCapturados,CantidadCapturados).
 
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-% reemplazarEnLista(+Indice, +Lista, +NewElement, -NewList)
-% 
-% Dada una Lista y un Indice,
-% Busca el elemento y lo reemplaza por NewElement 
-% Retorna una lista NewList con el elemento reemplazado
-reemplazarEnLista(Indice, Lista, NewElement, NewList) :-
-            nth0(Indice, Lista, _, R),
-            nth0(Indice, NewList, NewElement, R).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% INICIO ADYACENTES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% reemplazarEnGrilla(+Grid, +X, +Y, +NewElement, -NewGrid)
-% 
-% Dada una grilla Grid y una posicion (X,Y)
-% Busca el elemento y lo reemplaza por NewElement
-% Retorna la grilla NewGrid con el elemento reemplazado
-reemplazarEnGrilla(Grid,X,Y,NewElement,NewGrid):- 
-			nth0(X,Grid,Fila), 
-			reemplazarEnLista(Y,Fila,NewElement,NewFila),
-			reemplazarEnLista(X, Grid, NewFila, NewGrid).
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% adyacentesC(+Grid,+Color,-NewGrid)
 %
-% insertarEnLista(+E, +L, -[E|L]).
-% 
-% Inserta el elemento E al comienzo de la lista L
-insertarEnLista(E,L,[E|L]).
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-% insertarUltimo(+E, +[], -[E]).
-% insertarUltimo(+E, +[L|Li], -[L|Zi])
-% 
-% Inserta el elemento E al final de la lista L
-insertarUltimo(E,[],[E]).
-insertarUltimo(E,[L|Li],[L|Zi]):-insertarUltimo(E,Li,Zi).
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-% getColor(+Grid,+X,+Y,-C)
-% 
-% Dada una grilla Grid, retorna el color C de una posicion (X,Y)
-getColor(Grid,X,Y,C):- 
-    		nth0(X,Grid,Px),
-    		nth0(Y,Px,C). 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-% mismoColor(+X,+X).
-% 
-% Chequea que 2 colores sean iguales
-mismoColor(X,X).
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-% pintarCapturadas(+Grid, +[], +Color,-Grid)
-% pintarCapturadas(+Grid, +[[X|[Y]]|Celdas], +Color, -NewGrid)
-%
-% Dada una grilla Grid, una lista de coordenadas X,Y de celdas capturadas, y un color
-% Pinta todas las celdas capturadas y retorna la nueva grilla NewGrid
-pintarCapturadas(Grid,[],_Color,Grid). 
-pintarCapturadas(Grid,[[X|[Y]]|Celdas],Color, NewGrid):-
-    	reemplazarEnGrilla(Grid,X,Y,Color,NewGrid1),
-		pintarCapturadas(NewGrid1,Celdas,Color,NewGrid).
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-% assertCeldaCapturada(+X,+Y,+Celdas,-NewCeldas):-
-% assertCeldaCapturada(_,_,Celdas,Celdas).
-%
-% En caso de que una celda en las coordenadas (X,Y) aun no haya sido capturada,
-% Se hace un assert de dicha celda y se agrega a la lista.
-assertCeldaCapturada(X,Y,Celdas,NewCeldas):-
-    	not(celdaCapturada(X,Y)),    	
-    	insertarUltimo([X,Y],Celdas,NewCeldas),
-    	assert(celdaCapturada(X,Y)).
-% Si la celda ya había sido capturada previamente, retorna la misma lista.
-assertCeldaCapturada(_,_,Celdas,Celdas).
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-% insertarCoordEnListaSiEsDelMismoColor(+G, +X, +Y, +C,+L,-ListaAdy)
-% insertarCoordEnListaSiEsDelMismoColor(_G,_X,_Y,_C, +L,-L).
-%
-% Dada una grilla G, si en las coordenadas (X,Y) está el color C
-% Entonces se agrega dichas coordenadas a la lista
-% Retorna la lista ListaAdy con el elemento reemplazado
-insertarCoordEnListaSiEsDelMismoColor(G,X,Y,C,L,ListaAdy):-
-    		getColor(G,X,Y,C1),
-    		mismoColor(C,C1),
-    		insertarEnLista([X,Y],L,ListaAdy).
-% Dada una grilla G, si en las coordenadas (X,Y) NO está el color C
-% Entonces se retorna la misma lista recibida
-insertarCoordEnListaSiEsDelMismoColor(_G,_X,_Y,_C,L,L).
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-% agregarCeldaCapturada(+Grid, +X, +Y, +Color, +Celdas, -NewCeldas)
-% agregarCeldaCapturada(_Grid,_X,_Y,_Color, +Celdas, -Celdas).
-%
-% Dada una grilla Grid, si en las coordenadas (X,Y) es del mismo color que el color recibido
-% y no era una celda previamente capturada,
-% Retorna la lista NewCeldas con las nueva celda capturada
-agregarCeldaCapturada(Grid,X,Y,Color,Celdas,NewCeldas):-
-    		getColor(Grid,X,Y,C1),
-    		mismoColor(Color,C1),
-    		assertCeldaCapturada(X,Y,Celdas,NewCeldas).
-% caso contrario devuelve la misma lista de celdas
-agregarCeldaCapturada(_Grid,_X,_Y,_Color,Celdas,Celdas).
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%% INICIO ADYACENTES %%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Dada una grilla Grid, busca las celdas capturadas, 
+% las pinta y captura las celdas adyacentes
+adyacentesC(Grid,Color,NewGrid):-    		
+        	findall([X,Y],celdaCapturada(X,Y),CeldasCapturadas),
+          	pintarCapturadas(Grid,CeldasCapturadas,Color,NewGrid),
+		 	obtenerAdyacentes(Grid,CeldasCapturadas,Color).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -220,13 +120,119 @@ obtenerAdyacentes(Grid,[[X|[Y]]|Celdas],Color):-
 			obtenerAdyacentes(Grid,NewCeldas3,Color).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-% adyacentesC(+Grid,+Color,-NewGrid)
-%
-% Dada una grilla Grid, busca las celdas capturadas, 
-% las pinta y captura las celdas adyacentes
-adyacentesC(Grid,Color,NewGrid):-    		
-          findall([X,Y],celdaCapturada(X,Y),CeldasCapturadas),
-          pintarCapturadas(Grid,CeldasCapturadas,Color,NewGrid),
-		 obtenerAdyacentes(Grid,CeldasCapturadas,Color).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% FIN DE ADYACENTES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% pintarCapturadas(+Grid, +[], +Color,-Grid)
+% pintarCapturadas(+Grid, +[[X|[Y]]|Celdas], +Color, -NewGrid)
+%
+% Dada una grilla Grid, una lista de coordenadas X,Y de celdas capturadas, y un color
+% Pinta todas las celdas capturadas y retorna la nueva grilla NewGrid
+pintarCapturadas(Grid,[],_Color,Grid). 
+pintarCapturadas(Grid,[[X|[Y]]|Celdas],Color, NewGrid):-
+    		reemplazarEnGrilla(Grid,X,Y,Color,NewGrid1),
+			pintarCapturadas(NewGrid1,Celdas,Color,NewGrid).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% agregarCeldaCapturada(+Grid, +X, +Y, +Color, +Celdas, -NewCeldas)
+% agregarCeldaCapturada(_Grid,_X,_Y,_Color, +Celdas, -Celdas).
+%
+% Dada una grilla Grid, si en las coordenadas (X,Y) es del mismo color que el color recibido
+% y no era una celda previamente capturada,
+% Retorna la lista NewCeldas con las nueva celda capturada
+agregarCeldaCapturada(Grid,X,Y,Color,Celdas,NewCeldas):-
+    		getColor(Grid,X,Y,C1),
+    		mismoColor(Color,C1),
+    		assertCeldaCapturada(X,Y,Celdas,NewCeldas).
+% caso contrario devuelve la misma lista de celdas
+agregarCeldaCapturada(_Grid,_X,_Y,_Color,Celdas,Celdas).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% assertCeldaCapturada(+X,+Y,+Celdas,-NewCeldas):-
+% assertCeldaCapturada(_,_,+Celdas,-Celdas).
+%
+% En caso de que una celda en las coordenadas (X,Y) aun no haya sido capturada,
+% Se hace un assert de dicha celda y se agrega a la lista.
+assertCeldaCapturada(X,Y,Celdas,NewCeldas):-
+    		not(celdaCapturada(X,Y)),    	
+    		insertarUltimo([X,Y],Celdas,NewCeldas),
+    		assert(celdaCapturada(X,Y)).
+% Si la celda ya había sido capturada previamente, retorna la misma lista.
+assertCeldaCapturada(_,_,Celdas,Celdas).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% reemplazarEnGrilla(+Grid, +X, +Y, +NewElement, -NewGrid)
+% 
+% Dada una grilla Grid y una posicion (X,Y)
+% Busca el elemento y lo reemplaza por NewElement
+% Retorna la grilla NewGrid con el elemento reemplazado
+reemplazarEnGrilla(Grid,X,Y,NewElement,NewGrid):- 
+			nth0(X,Grid,Fila), 
+			reemplazarEnLista(Y,Fila,NewElement,NewFila),
+			reemplazarEnLista(X, Grid, NewFila, NewGrid).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% reemplazarEnLista(+Indice, +Lista, +NewElement, -NewList)
+% 
+% Dada una Lista y un Indice,
+% Busca el elemento y lo reemplaza por NewElement 
+% Retorna una lista NewList con el elemento reemplazado
+reemplazarEnLista(Indice, Lista, NewElement, NewList) :-
+            nth0(Indice, Lista, _, R),
+            nth0(Indice, NewList, NewElement, R).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% insertarCoordEnListaSiEsDelMismoColor(+G, +X, +Y, +C,+L,-ListaAdy)
+% insertarCoordEnListaSiEsDelMismoColor(_G,_X,_Y,_C, +L,-L).
+%
+% Dada una grilla G, si en las coordenadas (X,Y) está el color C
+% Entonces se agrega dichas coordenadas a la lista
+% Retorna la lista ListaAdy con el elemento reemplazado
+insertarCoordEnListaSiEsDelMismoColor(G,X,Y,C,L,ListaAdy):-
+    		getColor(G,X,Y,C1),
+    		mismoColor(C,C1),
+    		insertarEnLista([X,Y],L,ListaAdy).
+% Dada una grilla G, si en las coordenadas (X,Y) NO está el color C
+% Entonces se retorna la misma lista recibida
+insertarCoordEnListaSiEsDelMismoColor(_G,_X,_Y,_C,L,L).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% insertarEnLista(+E, +L, -[E|L]).
+% 
+% Inserta el elemento E al comienzo de la lista L
+insertarEnLista(E,L,[E|L]).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% insertarUltimo(+E, +[], -[E]).
+% insertarUltimo(+E, +[L|Li], -[L|Zi])
+% 
+% Inserta el elemento E al final de la lista L
+insertarUltimo(E,[],[E]).
+insertarUltimo(E,[L|Li],[L|Zi]):-insertarUltimo(E,Li,Zi).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% getColor(+Grid,+X,+Y,-C)
+% 
+% Dada una grilla Grid, retorna el color C de una posicion (X,Y)
+getColor(Grid,X,Y,C):- 
+    		nth0(X,Grid,Px),
+    		nth0(Y,Px,C). 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% mismoColor(+X,+X).
+% 
+% Chequea que 2 colores sean iguales
+mismoColor(X,X).
