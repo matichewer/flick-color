@@ -34,9 +34,9 @@ flick(Grid,X,Y,Color,NewGrid,CantidadCapturados):-
 % Dada una grilla Grid, busca las celdas capturadas, 
 % las pinta y captura las celdas adyacentes
 adyacentesC(Grid,Color,NewGrid):-    		
-        	findall([X,Y],celdaCapturada(X,Y),CeldasCapturadas),
-          	pintarCapturadas(Grid,CeldasCapturadas,Color,NewGrid),
-		 	obtenerAdyacentes(Grid,CeldasCapturadas,Color).
+			findall([X,Y],celdaCapturada(X,Y),CeldasCapturadas),
+			pintarCapturadas(Grid,CeldasCapturadas,Color,NewGrid),
+			obtenerAdyacentes(Grid,CeldasCapturadas,Color).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -50,73 +50,73 @@ obtenerAdyacentes(_Grid,[],_Color).
 
 % obtener adyacentes de las ESQUINAS
 obtenerAdyacentes(Grid,[[0|[0]]|Celdas],Color):-
-    		agregarCeldaCapturada(Grid,0,1,Color,Celdas,NewCeldas),
-    		agregarCeldaCapturada(Grid,1,0,Color,NewCeldas,NewCeldas1),
+			agregarCeldaCapturada(Grid,0,1,Color,Celdas,NewCeldas),
+			agregarCeldaCapturada(Grid,1,0,Color,NewCeldas,NewCeldas1),
 			obtenerAdyacentes(Grid,NewCeldas1,Color).
 
 obtenerAdyacentes(Grid,[[13|[13]]|Celdas],Color):-
-    		agregarCeldaCapturada(Grid,12,13,Color,Celdas,NewCeldas),
-    		agregarCeldaCapturada(Grid,13,12,Color,NewCeldas,NewCeldas1),
+			agregarCeldaCapturada(Grid,12,13,Color,Celdas,NewCeldas),
+			agregarCeldaCapturada(Grid,13,12,Color,NewCeldas,NewCeldas1),
 			obtenerAdyacentes(Grid,NewCeldas1,Color).
     		
 obtenerAdyacentes(Grid,[[0|[13]]|Celdas],Color):-
-    		agregarCeldaCapturada(Grid,0,12,Color,Celdas,NewCeldas),
-    		agregarCeldaCapturada(Grid,1,13,Color,NewCeldas,NewCeldas1),
+			agregarCeldaCapturada(Grid,0,12,Color,Celdas,NewCeldas),
+			agregarCeldaCapturada(Grid,1,13,Color,NewCeldas,NewCeldas1),
 			obtenerAdyacentes(Grid,NewCeldas1,Color).
 
 obtenerAdyacentes(Grid,[[13|[0]]|Celdas],Color):-
-    		agregarCeldaCapturada(Grid,12,0,Color,Celdas,NewCeldas),
-    		agregarCeldaCapturada(Grid,13,1,Color,NewCeldas,NewCeldas1),
+			agregarCeldaCapturada(Grid,12,0,Color,Celdas,NewCeldas),
+			agregarCeldaCapturada(Grid,13,1,Color,NewCeldas,NewCeldas1),
 			obtenerAdyacentes(Grid,NewCeldas1,Color).
 
 % obtener adyacentes de las PAREDES
 obtenerAdyacentes(Grid,[[0|[Y]]|Celdas],Color):- % PARED ARRIBA
-    		Y>0, Y<13,
-    		W is Y-1,
-    		agregarCeldaCapturada(Grid,0,W,Color,Celdas,NewCeldas),
-    		Z is Y+1,
-    		agregarCeldaCapturada(Grid,0,Z,Color,NewCeldas,NewCeldas1),
-    		agregarCeldaCapturada(Grid,1,Y,Color,NewCeldas1,NewCeldas2),
+			Y>0, Y<13,
+			W is Y-1,
+			agregarCeldaCapturada(Grid,0,W,Color,Celdas,NewCeldas),
+			Z is Y+1,
+			agregarCeldaCapturada(Grid,0,Z,Color,NewCeldas,NewCeldas1),
+			agregarCeldaCapturada(Grid,1,Y,Color,NewCeldas1,NewCeldas2),
 			obtenerAdyacentes(Grid,NewCeldas2,Color).
 
 obtenerAdyacentes(Grid,[[X|[0]]|Celdas],Color):- % PARED IZQUIERDA
-    		X>0, X<13,
-    		W is X-1,
-    		agregarCeldaCapturada(Grid,W,0,Color,Celdas,NewCeldas),
-    		Z is X+1,
-    		agregarCeldaCapturada(Grid,Z,0,Color,NewCeldas,NewCeldas1),
-    		agregarCeldaCapturada(Grid,X,1,Color,NewCeldas1,NewCeldas2),
+			X>0, X<13,
+			W is X-1,
+			agregarCeldaCapturada(Grid,W,0,Color,Celdas,NewCeldas),
+			Z is X+1,
+			agregarCeldaCapturada(Grid,Z,0,Color,NewCeldas,NewCeldas1),
+			agregarCeldaCapturada(Grid,X,1,Color,NewCeldas1,NewCeldas2),
 			obtenerAdyacentes(Grid,NewCeldas2,Color).
 
 obtenerAdyacentes(Grid,[[13|[Y]]|Celdas],Color):- % PARED ABAJO
-    		Y>0, Y<13,
-    		W is Y-1,
-    		agregarCeldaCapturada(Grid,13,W,Color,Celdas,NewCeldas),
-    		Z is Y+1,
-    		agregarCeldaCapturada(Grid,13,Z,Color,NewCeldas,NewCeldas1),
-    		agregarCeldaCapturada(Grid,12,Y,Color,NewCeldas1,NewCeldas2),
+			Y>0, Y<13,
+			W is Y-1,
+			agregarCeldaCapturada(Grid,13,W,Color,Celdas,NewCeldas),
+			Z is Y+1,
+			agregarCeldaCapturada(Grid,13,Z,Color,NewCeldas,NewCeldas1),
+			agregarCeldaCapturada(Grid,12,Y,Color,NewCeldas1,NewCeldas2),
 			obtenerAdyacentes(Grid,NewCeldas2,Color).
 
 obtenerAdyacentes(Grid,[[X|[13]]|Celdas],Color):- % PARED DERECHA
-    		X>0, X<13,
-    		W is X-1,
-    		agregarCeldaCapturada(Grid,W,13,Color,Celdas,NewCeldas),
-    		agregarCeldaCapturada(Grid,X,12,Color,NewCeldas,NewCeldas1),
-    		Z is X+1,
-    		agregarCeldaCapturada(Grid,Z,13,Color,NewCeldas1,NewCeldas2),
+			X>0, X<13,
+			W is X-1,
+			agregarCeldaCapturada(Grid,W,13,Color,Celdas,NewCeldas),
+			agregarCeldaCapturada(Grid,X,12,Color,NewCeldas,NewCeldas1),
+			Z is X+1,
+			agregarCeldaCapturada(Grid,Z,13,Color,NewCeldas1,NewCeldas2),
 			obtenerAdyacentes(Grid,NewCeldas2,Color).
 
 % CASO GENERAL
 obtenerAdyacentes(Grid,[[X|[Y]]|Celdas],Color):-
-    		X>0, X<13, Y>0, Y<13,
-    		W is X-1, 
-    		agregarCeldaCapturada(Grid,W,Y,Color,Celdas,NewCeldas), % ARRIBA
-    		Z is X+1,
-    		agregarCeldaCapturada(Grid,Z,Y,Color,NewCeldas,NewCeldas1), % ABAJO
-    		A is Y-1,    
-    		agregarCeldaCapturada(Grid,X,A,Color,NewCeldas1,NewCeldas2), % IZQUIERDA
-    		B is Y + 1,
-    		agregarCeldaCapturada(Grid,X,B,Color,NewCeldas2,NewCeldas3), % DERECHA
+			X>0, X<13, Y>0, Y<13,
+			W is X-1, 
+			agregarCeldaCapturada(Grid,W,Y,Color,Celdas,NewCeldas), % ARRIBA
+			Z is X+1,
+			agregarCeldaCapturada(Grid,Z,Y,Color,NewCeldas,NewCeldas1), % ABAJO
+			A is Y-1,    
+			agregarCeldaCapturada(Grid,X,A,Color,NewCeldas1,NewCeldas2), % IZQUIERDA
+			B is Y + 1,
+			agregarCeldaCapturada(Grid,X,B,Color,NewCeldas2,NewCeldas3), % DERECHA
 			obtenerAdyacentes(Grid,NewCeldas3,Color).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -134,7 +134,7 @@ obtenerAdyacentes(Grid,[[X|[Y]]|Celdas],Color):-
 % Pinta todas las celdas capturadas y retorna la nueva grilla NewGrid
 pintarCapturadas(Grid,[],_Color,Grid). 
 pintarCapturadas(Grid,[[X|[Y]]|Celdas],Color, NewGrid):-
-    		reemplazarEnGrilla(Grid,X,Y,Color,NewGrid1),
+			reemplazarEnGrilla(Grid,X,Y,Color,NewGrid1),
 			pintarCapturadas(NewGrid1,Celdas,Color,NewGrid).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -146,9 +146,9 @@ pintarCapturadas(Grid,[[X|[Y]]|Celdas],Color, NewGrid):-
 % y no era una celda previamente capturada,
 % Retorna la lista NewCeldas con las nueva celda capturada
 agregarCeldaCapturada(Grid,X,Y,Color,Celdas,NewCeldas):-
-    		getColor(Grid,X,Y,C1),
-    		mismoColor(Color,C1),
-    		assertCeldaCapturada(X,Y,Celdas,NewCeldas).
+			getColor(Grid,X,Y,C1),
+			mismoColor(Color,C1),
+			assertCeldaCapturada(X,Y,Celdas,NewCeldas).
 % caso contrario devuelve la misma lista de celdas
 agregarCeldaCapturada(_Grid,_X,_Y,_Color,Celdas,Celdas).
 
@@ -160,9 +160,9 @@ agregarCeldaCapturada(_Grid,_X,_Y,_Color,Celdas,Celdas).
 % En caso de que una celda en las coordenadas (X,Y) aun no haya sido capturada,
 % Se hace un assert de dicha celda y se agrega a la lista.
 assertCeldaCapturada(X,Y,Celdas,NewCeldas):-
-    		not(celdaCapturada(X,Y)),    	
-    		insertarUltimo([X,Y],Celdas,NewCeldas),
-    		assert(celdaCapturada(X,Y)).
+			not(celdaCapturada(X,Y)),    	
+			insertarUltimo([X,Y],Celdas,NewCeldas),
+			assert(celdaCapturada(X,Y)).
 % Si la celda ya había sido capturada previamente, retorna la misma lista.
 assertCeldaCapturada(_,_,Celdas,Celdas).
 
@@ -186,8 +186,8 @@ reemplazarEnGrilla(Grid,X,Y,NewElement,NewGrid):-
 % Busca el elemento y lo reemplaza por NewElement 
 % Retorna una lista NewList con el elemento reemplazado
 reemplazarEnLista(Indice, Lista, NewElement, NewList) :-
-            nth0(Indice, Lista, _, R),
-            nth0(Indice, NewList, NewElement, R).
+			nth0(Indice, Lista, _, R),
+			nth0(Indice, NewList, NewElement, R).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -198,9 +198,9 @@ reemplazarEnLista(Indice, Lista, NewElement, NewList) :-
 % Entonces se agrega dichas coordenadas a la lista
 % Retorna la lista ListaAdy con el elemento reemplazado
 insertarCoordEnListaSiEsDelMismoColor(G,X,Y,C,L,ListaAdy):-
-    		getColor(G,X,Y,C1),
-    		mismoColor(C,C1),
-    		insertarEnLista([X,Y],L,ListaAdy).
+			getColor(G,X,Y,C1),
+			mismoColor(C,C1),
+			insertarEnLista([X,Y],L,ListaAdy).
 % Dada una grilla G, si en las coordenadas (X,Y) NO está el color C
 % Entonces se retorna la misma lista recibida
 insertarCoordEnListaSiEsDelMismoColor(_G,_X,_Y,_C,L,L).
@@ -227,8 +227,8 @@ insertarUltimo(E,[L|Li],[L|Zi]):-insertarUltimo(E,Li,Zi).
 % 
 % Dada una grilla Grid, retorna el color C de una posicion (X,Y)
 getColor(Grid,X,Y,C):- 
-    		nth0(X,Grid,Px),
-    		nth0(Y,Px,C). 
+			nth0(X,Grid,Px),
+			nth0(Y,Px,C). 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
