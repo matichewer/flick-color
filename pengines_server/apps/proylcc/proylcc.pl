@@ -170,7 +170,7 @@ obtenerAdyacentes(Grid,[[13|[0]]|Celdas],Color):-
 			obtenerAdyacentes(Grid,NewCeldas1,Color).
 
 % obtener adyacentes de las PAREDES
-obtenerAdyacentes(Grid,[[0|[Y]]|Celdas],Color):-
+obtenerAdyacentes(Grid,[[0|[Y]]|Celdas],Color):- % PARED ARRIBA
     		Y>0, Y<13,
     		W is Y-1,
     		agregarCeldaCapturada(Grid,0,W,Color,Celdas,NewCeldas),
@@ -179,25 +179,25 @@ obtenerAdyacentes(Grid,[[0|[Y]]|Celdas],Color):-
     		agregarCeldaCapturada(Grid,1,Y,Color,NewCeldas1,NewCeldas2),
 			obtenerAdyacentes(Grid,NewCeldas2,Color).
 
-obtenerAdyacentes(Grid,[[X|[0]]|Celdas],Color):-
+obtenerAdyacentes(Grid,[[X|[0]]|Celdas],Color):- % PARED IZQUIERDA
     		X>0, X<13,
     		W is X-1,
     		agregarCeldaCapturada(Grid,W,0,Color,Celdas,NewCeldas),
     		Z is X+1,
     		agregarCeldaCapturada(Grid,Z,0,Color,NewCeldas,NewCeldas1),
-    		agregarCeldaCapturada(Grid,1,X,Color,NewCeldas1,NewCeldas2),
+    		agregarCeldaCapturada(Grid,X,1,Color,NewCeldas1,NewCeldas2),
 			obtenerAdyacentes(Grid,NewCeldas2,Color).
 
-obtenerAdyacentes(Grid,[[13|[Y]]|Celdas],Color):-
+obtenerAdyacentes(Grid,[[13|[Y]]|Celdas],Color):- % PARED ABAJO
     		Y>0, Y<13,
     		W is Y-1,
-    		agregarCeldaCapturada(Grid,13,Y,Color,Celdas,NewCeldas),
-    		agregarCeldaCapturada(Grid,13,W,Color,NewCeldas,NewCeldas1),
+    		agregarCeldaCapturada(Grid,13,W,Color,Celdas,NewCeldas),
     		Z is Y+1,
-    		agregarCeldaCapturada(Grid,12,Z,Color,NewCeldas1,NewCeldas2),
+    		agregarCeldaCapturada(Grid,13,Z,Color,NewCeldas,NewCeldas1),
+    		agregarCeldaCapturada(Grid,12,Y,Color,NewCeldas1,NewCeldas2),
 			obtenerAdyacentes(Grid,NewCeldas2,Color).
 
-obtenerAdyacentes(Grid,[[X|[13]]|Celdas],Color):-
+obtenerAdyacentes(Grid,[[X|[13]]|Celdas],Color):- % PARED DERECHA
     		X>0, X<13,
     		W is X-1,
     		agregarCeldaCapturada(Grid,W,13,Color,Celdas,NewCeldas),
