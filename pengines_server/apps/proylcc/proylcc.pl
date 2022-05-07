@@ -191,22 +191,6 @@ reemplazarEnLista(Indice, Lista, NewElement, NewList) :-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% insertarCoordEnListaSiEsDelMismoColor(+G, +X, +Y, +C,+L,-ListaAdy)
-% insertarCoordEnListaSiEsDelMismoColor(_G,_X,_Y,_C, +L,-L).
-%
-% Dada una grilla G, si en las coordenadas (X,Y) está el color C
-% Entonces se agrega dichas coordenadas a la lista
-% Retorna la lista ListaAdy con el elemento reemplazado
-insertarCoordEnListaSiEsDelMismoColor(G,X,Y,C,L,ListaAdy):-
-			getColor(G,X,Y,C1),
-			mismoColor(C,C1),
-			insertarEnLista([X,Y],L,ListaAdy).
-% Dada una grilla G, si en las coordenadas (X,Y) NO está el color C
-% Entonces se retorna la misma lista recibida
-insertarCoordEnListaSiEsDelMismoColor(_G,_X,_Y,_C,L,L).
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
 % insertarEnLista(+E, +L, -[E|L]).
 % 
 % Inserta el elemento E al comienzo de la lista L
