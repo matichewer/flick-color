@@ -37,6 +37,7 @@ class Game extends React.Component {
       cantidadDeCapturados: 0,
       historial: [], // historial de colores
       origen: undefined, // celda de origen
+      listaCapturados: [],
     };
     this.handleClick = this.handleClick.bind(this);
     this.origenSeleccionado = this.origenSeleccionado.bind(this);
@@ -82,7 +83,20 @@ class Game extends React.Component {
     const fila = this.state.origen ? this.state.origen[0] : 0;
     const columna = this.state.origen ? this.state.origen[1] : 0;
 
-    const queryS = "flick(" + gridS + "," + fila + "," + columna + "," + color + ", Grid, CantCapturados)";
+    if (this.state.listaCapturados.length === 0) {
+      console.log("Entro en el primer if")
+      if (this.state.origen){
+        this.state.listaCapturados.push("[[" + this.state.origen + "]]");
+        console.log("Entro en el segundo if");
+      }
+      else{
+        this.state.listaCapturados.push("[[0,0]]");
+        console.log("Entro en el else");
+      }      
+    }
+
+    const queryS = "flick(" + gridS + "," + fila + "," + columna + "," + color + ",Grid," + this.state.listaCapturados + ",NuevaListaCapturados,CantCapturados)";
+    console.log(queryS);
     this.setState({
       waiting: true
     });
@@ -95,6 +109,7 @@ class Game extends React.Component {
           waiting: false,
           cantidadDeCapturados: response['CantCapturados'],
           complete: response['CantCapturados']===196, // complete es Verdadero si gano
+          listaCapturados: response['NuevaListaCapturados'],
         });
         // si ganamos mostramos un aviso
         if(this.state.complete){
