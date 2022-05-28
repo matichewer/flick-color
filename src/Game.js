@@ -87,11 +87,11 @@ class Game extends React.Component {
     if (this.state.listaCapturados.length === 0) {
       console.log("Entro en el primer if")
       if (this.state.origen){
-        this.state.listaCapturados.push(this.state.origen);
+        this.state.listaCapturados.push( "[["+this.state.origen+"]]");
         console.log("Entro en el segundo if");
       }
       else{
-        this.state.listaCapturados.push("[0,0]");
+        this.state.listaCapturados.push("[[0,0]]");
         console.log("Entro en el else");
       }      
     }
