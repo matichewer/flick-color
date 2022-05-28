@@ -83,14 +83,15 @@ class Game extends React.Component {
     const fila = this.state.origen ? this.state.origen[0] : 0;
     const columna = this.state.origen ? this.state.origen[1] : 0;
 
+
     if (this.state.listaCapturados.length === 0) {
       console.log("Entro en el primer if")
       if (this.state.origen){
-        this.state.listaCapturados.push("[[" + this.state.origen + "]]");
+        this.state.listaCapturados.push(this.state.origen);
         console.log("Entro en el segundo if");
       }
       else{
-        this.state.listaCapturados.push("[[0,0]]");
+        this.state.listaCapturados.push("[0,0]");
         console.log("Entro en el else");
       }      
     }
@@ -111,6 +112,8 @@ class Game extends React.Component {
           complete: response['CantCapturados']===196, // complete es Verdadero si gano
           listaCapturados: response['NuevaListaCapturados'],
         });
+        console.log(this.state.listaCapturados);
+        console.log(this.state.cantidadDeCapturados);
         // si ganamos mostramos un aviso
         if(this.state.complete){
           alert("Felicitaciones, Ganaste!")
