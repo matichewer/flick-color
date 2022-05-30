@@ -87,7 +87,7 @@ class Game extends React.Component {
     if (this.state.listaCapturados.length === 0) {
       console.log("Entro en el primer if")
       if (this.state.origen){
-        this.state.listaCapturados.push( "[["+this.state.origen+"]]");
+        this.state.listaCapturados.push( this.state.origen);
         console.log("Entro en el segundo if");
       }
       else{
@@ -96,7 +96,8 @@ class Game extends React.Component {
       }      
     }
 
-    const queryS = "flick(" + gridS + "," + fila + "," + columna + "," + color + ",Grid," + this.state.listaCapturados + ",NuevaListaCapturados,CantCapturados)";
+
+    const queryS = "flick(" + gridS + "," + fila + "," + columna + "," + color + ",Grid," + JSON.stringify(this.state.listaCapturados).replaceAll('"', "") + ",NuevaListaCapturados,CantCapturados)";
     console.log(queryS);
     this.setState({
       waiting: true
