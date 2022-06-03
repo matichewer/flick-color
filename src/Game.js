@@ -83,8 +83,18 @@ class Game extends React.Component {
     const fila = this.state.origen ? this.state.origen[0] : 0;
     const columna = this.state.origen ? this.state.origen[1] : 0;
   
-    // 
-    this.state.origen = this.state.origen ? this.state.origen : [0,0];
+
+    // ESTO DA WARNING: PREGUNTAR
+      this.state.origen = this.state.origen ? this.state.origen : [0,0];
+    /*
+    if (!this.state.origen){
+      console.log("entro al if")
+        this.setState({
+          origen: [0,0]
+        })
+    }*/
+    
+
   
     if (this.state.listaCapturados.length === 0) {
       //if (this.state.origen){
@@ -97,7 +107,7 @@ class Game extends React.Component {
 
 
     const queryS = "flick(" + gridS + "," + fila + "," + columna + "," + color + ",Grid," + JSON.stringify(this.state.listaCapturados).replaceAll('"', "") + ",NuevaListaCapturados,CantCapturados)";
-    console.log(queryS);
+    //console.log(queryS);
     this.setState({
       waiting: true
     });
@@ -160,6 +170,7 @@ class Game extends React.Component {
               <div className="capturadosLab">Cantidad de capturados</div>
               <div className="capturadosNum">{this.state.cantidadDeCapturados}</div>
             </div> 
+            <button className='BotonAyuda' onClick={() => this.handleHelp()}>Ayuda</button>
         </div>
         <Board 
             grid={this.state.grid} 

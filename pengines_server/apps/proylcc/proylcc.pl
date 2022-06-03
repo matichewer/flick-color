@@ -4,6 +4,31 @@
 	]).
 
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% estrategia(X,Y+Profundidad, -ListaColores, -NewCapturadas)
+%
+estrategia(X,Y,Grid,Profundidad,ListaColoresMejorJugada,NewCapturadas):-
+    
+    	getColor([X,Y],Grid,Color),   
+    	delete([r,p,g,b,y,v],Color, ListaColoresArbol),    	
+    	recorrerColores([X,Y],Grid).                      
+    
+    	
+recorrerColores([Color|ListaColores], ):-
+    	flick(Grid,X,Y,Color,NewGrid,ListaCapturados,NewListaCapturados,CantidadCapturados),
+    	
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% cincoColores(+Color,+Lista, -ListaColores)
+%
+%cincoColores(Color,Lista, ListaColores):-
+%    	delete(Lista,Color,ListaColores).
+
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 % flick(+Grid, +X, +Y, +Color, -NewGrid,-CantidadCapturados)
