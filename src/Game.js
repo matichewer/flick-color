@@ -86,14 +86,12 @@ class Game extends React.Component {
     //this.state.origen = this.state.origen ? this.state.origen : [0,0];
     
 
-    const fila;
-    const columna;
+    const fila = 0;
+    const columna = 0;
     if (this.state.origen){
         fila = this.state.origen[0];
         columna = this.state.origen[1];
     } else {
-        fila = 0;
-        columna = 0;
         this.state.origen = [0,0];
     }
 
