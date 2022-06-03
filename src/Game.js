@@ -83,6 +83,7 @@ class Game extends React.Component {
     const fila = this.state.origen ? this.state.origen[0] : 0;
     const columna = this.state.origen ? this.state.origen[1] : 0;
 
+    this.state.origen = this.state.origen ? this.state.origen : [0,0];
 
     if (this.state.listaCapturados.length === 0) {
       console.log("Entro en el primer if")
