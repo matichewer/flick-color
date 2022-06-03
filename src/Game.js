@@ -80,12 +80,12 @@ class Game extends React.Component {
     const gridS = JSON.stringify(this.state.grid).replaceAll('"', "");
 
     // si el usuario no elige celda de origen, entonces por defecto es la [0,0]
-    //const fila = this.state.origen ? this.state.origen[0] : 0;
-    //const columna = this.state.origen ? this.state.origen[1] : 0;
+    const fila = this.state.origen ? this.state.origen[0] : 0;
+    const columna = this.state.origen ? this.state.origen[1] : 0;
 
-    //this.state.origen = this.state.origen ? this.state.origen : [0,0];
+    this.state.origen = this.state.origen ? this.state.origen : [0,0];
     
-
+/*
     const fila = 0;
     const columna = 0;
     if (this.state.origen){
@@ -93,7 +93,7 @@ class Game extends React.Component {
         columna = this.state.origen[1];
     } else {
         this.state.origen = [0,0];
-    }
+    }*/
 
     if (this.state.listaCapturados.length === 0) {
       if (this.state.origen){
