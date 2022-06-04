@@ -9,15 +9,14 @@
 %
 % estrategia(X,Y+Profundidad, -ListaColores, -NewCapturadas)
 %
-estrategia(X,Y,Grid,Profundidad,ListaColoresMejorJugada,NewCapturadas):-
-    
-    	getColor([X,Y],Grid,Color),   
-    	delete([r,p,g,b,y,v],Color, ListaColoresArbol),    	
-    	recorrerColores([X,Y],Grid).                      
+%estrategia(X,Y,Grid,Profundidad,Lista,ColoresMejorJugada,NewCapturadas):-
+%    	getColor([X,Y],Grid,Color),   
+%    	delete([r,p,g,b,y,v],Color, ListaColoresArbol),    	
+%    	recorrerColores([X,Y],Grid).                      
     
     	
-recorrerColores([Color|ListaColores], ):-
-    	flick(Grid,X,Y,Color,NewGrid,ListaCapturados,NewListaCapturados,CantidadCapturados),
+%recorrerColores([Color|ListaColores], ):-
+%    	flick(Grid,X,Y,Color,NewGrid,ListaCapturados,NewListaCapturados,CantidadCapturados),
     	
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -27,6 +26,25 @@ recorrerColores([Color|ListaColores], ):-
 %    	delete(Lista,Color,ListaColores).
 
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% inicializar(+Grid, +X, +Y, -Color, -NewListaCapturados, -CantidadCapturados):- 
+% 
+% En X,Y recibe las coordenadas de origen para el inicio del juego
+% En NewListaCapturados retorno la lista de celdas capturadas 
+% En CantidadCapturados retorna la cantidad de celdas capturadas 
+
+inicializar(Grid,X,Y,Color,NewListaCapturados,CantidadCapturados):-
+
+		% Obtengo el color de la celda origen y la retorno para agregarla al historial
+		getColor([X,Y],Grid,Color),
+
+		% Obtengo la nueva lista de celdas capturadas
+		adyCStar([X,Y],Grid,NewListaCapturados),
+
+		% Calculo la cantidad de celdas capturadas
+		length(NewListaCapturados,CantidadCapturados).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -51,7 +69,6 @@ flick(Grid,X,Y,Color,NewGrid,ListaCapturados,NewListaCapturados,CantidadCapturad
 
 			% Calculo la cantidad de celdas capturadas
     		length(NewListaCapturados,CantidadCapturados).
-
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -88,23 +88,21 @@ class Game extends React.Component {
       this.state.origen = this.state.origen ? this.state.origen : [0,0];
     /*
     if (!this.state.origen){
-      console.log("entro al if")
         this.setState({
           origen: [0,0]
         })
-    }*/
-    
+    }
+*/
 
   
     if (this.state.listaCapturados.length === 0) {
       //if (this.state.origen){
-        this.state.listaCapturados.push( this.state.origen);
+        //this.state.listaCapturados.push(JSON.stringify(this.state.origen).replaceAll('"', ""));
       //}
       //else{
-      //  this.state.listaCapturados.push([0,0]);
+        this.state.listaCapturados.push([0,0]);
       //}
     }
-
 
     const queryS = "flick(" + gridS + "," + fila + "," + columna + "," + color + ",Grid," + JSON.stringify(this.state.listaCapturados).replaceAll('"', "") + ",NuevaListaCapturados,CantCapturados)";
     //console.log(queryS);
@@ -113,8 +111,8 @@ class Game extends React.Component {
     });
     this.pengine.query(queryS, (success, response) => {      
       if (success) {
-        this.state.historial.push(color)
-        this.setState({
+          this.state.historial.push(color)
+          this.setState({
           grid: response['Grid'],
           turns: this.state.turns + 1,
           waiting: false,
@@ -122,8 +120,6 @@ class Game extends React.Component {
           complete: response['CantCapturados']===196, // complete es Verdadero si gano
           listaCapturados: response['NuevaListaCapturados'],
         });
-        console.log(this.state.listaCapturados);
-        console.log(this.state.cantidadDeCapturados);
         // si ganamos mostramos un aviso
         if(this.state.complete){
           alert("Felicitaciones, Ganaste!")
@@ -139,10 +135,36 @@ class Game extends React.Component {
  
   // funcion del origen
   origenSeleccionado(pos){
-    this.setState({
-      origen: pos,
-    })
+      this.setState({
+          origen: pos
+      })
+
+      const gridS = JSON.stringify(this.state.grid).replaceAll('"', "");
+      const fila = pos[0];
+      const columna = pos[1];
+      const queryS = "inicializar(" + gridS + "," + fila + "," + columna + ",Color,NuevaListaCapturados,CantCapturados)";
+      this.setState({
+          waiting: true
+      });
+      this.pengine.query(queryS, (success, response) => {   
+          if (success) {
+              this.state.historial.push(response['Color'])
+              this.setState({
+                  turns: this.state.turns + 1,
+                  waiting: false,
+                  cantidadDeCapturados: response['CantCapturados'],
+                  complete: response['CantCapturados']===196, // complete es Verdadero si gano
+                  listaCapturados: response['NuevaListaCapturados'],
+              });            
+          } else {
+                this.setState({
+                    waiting: false
+                });
+          }
+      });
   }
+
+
 
   render() {
     if (this.state.grid === null) {
