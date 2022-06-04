@@ -85,14 +85,14 @@ class Game extends React.Component {
   
 
     // ESTO DA WARNING: PREGUNTAR
-      this.state.origen = this.state.origen ? this.state.origen : [0,0];
-    /*
+    //  this.state.origen = this.state.origen ? this.state.origen : [0,0];
+    
     if (!this.state.origen){
         this.setState({
           origen: [0,0]
         })
     }
-*/
+
 
   
     if (this.state.listaCapturados.length === 0) {
