@@ -4,6 +4,25 @@
 	]).
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% getGrillasDeUnNivel( +Grid, +X, +Y, +ColorActual, +ListaCapturados,+ SecuenciaColores, -NewSecuenciaColores, ListaDeGrillas):-
+% 
+% El parámetro ListaCapturados es mejor recibirlo por parámetro CREO.
+% Lo podemos calcular acá mismo, pero sería al pedo otra vez pedirlo. Sería mejor recibirlo por parámetro
+% CONSULTA DE EJEMPLO: init3(Grid), getGrillasDeUnNivel(Grid,0,0,y,[[0,0]],NewListaCapturados,[y], NewSecuenciaColores, ListaDeGrillas)
+getGrillasDeUnNivel(Grid,X,Y,ColorActual,ListaCapturados, NewListaCapturados,SecuenciaColores,NewSecuenciaColores,ListaDeGrillas):-
+              
+    		delete([r,v,p,g,y,b],ColorActual,ListaColores),           
+			findall(NewGrid, (
+                 		member(C,ListaColores),
+     			 		flick(Grid,X,Y,C,NewGrid,ListaCapturados,NewListaCapturados,NewCantidadCapturados),
+        				length(ListaCapturados,CantidadCapturados),
+        		 		NewCantidadCapturados > CantidadCapturados,
+                        append(SecuenciaColores, C, NewSecuenciaColores)
+        		), ListaDeGrillas).
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
