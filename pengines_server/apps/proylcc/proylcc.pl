@@ -6,7 +6,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 % éste predicado sirve para cuando el usuario no elige una celda de origen
-inicializarOrigenDefault(Grid,Color,NewGrid,NewListaCapturados,CantidadCapturados):-
+inicializarOrigenDefault(Grid,Color,Grid,NewListaCapturados,CantidadCapturados):-
         getColor([0,0],Grid,Color),
         !,
         adyCStar([0,0],Grid,NewListaCapturados),

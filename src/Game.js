@@ -101,6 +101,10 @@ class Game extends React.Component {
       //}
       //else{
         //this.state.listaCapturados.push([0,0]);
+
+      this.setState({
+        origen: [0,0]
+      })
       const gridS = JSON.stringify(this.state.grid).replaceAll('"', "");
       const querySInit = "inicializarOrigenDefault(" + gridS + "," +color + ",NewGrid,NuevaListaCapturados,CantCapturados)";
       this.setState({
