@@ -93,3 +93,17 @@ body {
   width: 60px;
   border: 1px solid black;
 }
+.estrategia{
+  align-items: center;
+  display:flex;
+  color: black;
+  flex-direction: column;
+  margin-top: 40px;
+  font-size: 40px;
+  margin: 20px;
+}
+.profundidadNum {
+  margin-top: 8px;
+  font-size: 30px;
+  border: black;
+}

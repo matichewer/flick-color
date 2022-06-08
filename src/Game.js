@@ -164,7 +164,7 @@ class Game extends React.Component {
       });
   }
 
-
+handleChange(event){this.setState({estrategia:event.target.value});}
 
   render() {
     if (this.state.grid === null) {
@@ -192,7 +192,11 @@ class Game extends React.Component {
               <div className="capturadosLab">Cantidad de capturados</div>
               <div className="capturadosNum">{this.state.cantidadDeCapturados}</div>
             </div> 
-            <button className='BotonAyuda' onClick={() => this.handleHelp()}>Ayuda</button>
+            <div className="estrategia">
+              <div className="profundidadLab">Estrategia</div>
+              <input className="profundidadNum" type='number' min= "0" max="30" value={this.state.estrategia} onChange={this.handleChange}/>
+              <button className='BotonAyuda' onClick={() => this.handleHelp()}>Ayuda</button>
+            </div>   
         </div>
         <Board 
             grid={this.state.grid} 
