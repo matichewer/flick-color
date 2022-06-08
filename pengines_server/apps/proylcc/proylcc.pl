@@ -3,6 +3,21 @@
 		flick/8
 	]).
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% éste predicado sirve para cuando el usuario no elige una celda de origen
+inicializarOrigenDefault(Grid,Color,NewGrid,NewListaCapturados,CantidadCapturados):-
+        getColor([0,0],Grid,Color),
+        !,
+        adyCStar([0,0],Grid,NewListaCapturados),
+        length(NewListaCapturados,CantidadCapturados).
+
+inicializarOrigenDefault(Grid,Color,NewGrid,NewListaCapturados,CantidadCapturados):-
+        reemplazarEnGrilla(Grid,[0,0],Color,NewGrid),
+        adyCStar([0,0],NewGrid,NewListaCapturados),
+        length(NewListaCapturados,CantidadCapturados).
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -13,7 +28,7 @@
 % CONSULTA DE EJEMPLO: init3(Grid), getGrillasDeUnNivel(Grid,0,0,y,[[0,0]],NewListaCapturados,[y], NewSecuenciaColores, ListaDeGrillas)
 getGrillasDeUnNivel(Grid,X,Y,ColorActual,ListaCapturados, NewListaCapturados,SecuenciaColores,NewSecuenciaColores,ListaDeGrillas):-
               
-    		delete([r,v,p,g,y,b],ColorActual,ListaColores),           
+    	delete([r,v,p,g,y,b],ColorActual,ListaColores),           
 			findall(NewGrid, (
                  		member(C,ListaColores),
      			 		flick(Grid,X,Y,C,NewGrid,ListaCapturados,NewListaCapturados,NewCantidadCapturados),

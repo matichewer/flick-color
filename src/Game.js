@@ -86,13 +86,13 @@ class Game extends React.Component {
 
     // ESTO DA WARNING: PREGUNTAR
     //  this.state.origen = this.state.origen ? this.state.origen : [0,0];
-    
+    /*
     if (!this.state.origen){
         this.setState({
           origen: [0,0]
         })
     }
-
+    */
 
   
     if (this.state.listaCapturados.length === 0) {
@@ -100,10 +100,34 @@ class Game extends React.Component {
         //this.state.listaCapturados.push(JSON.stringify(this.state.origen).replaceAll('"', ""));
       //}
       //else{
-        this.state.listaCapturados.push([0,0]);
+        //this.state.listaCapturados.push([0,0]);
+      const gridS = JSON.stringify(this.state.grid).replaceAll('"', "");
+      const querySInit = "inicializarOrigenDefault(" + gridS + "," +color + ",NewGrid,NuevaListaCapturados,CantCapturados)";
+      this.setState({
+          waiting: true
+      });
+      this.pengine.query(querySInit, (success, response) => {   
+          if (success) {
+              this.state.historial.push(color)
+              this.setState({
+                  grid: response['NewGrid'],
+                  turns: this.state.turns + 1,
+                  waiting: false,
+                  cantidadDeCapturados: response['CantCapturados'],
+                  complete: response['CantCapturados']===196, // complete es Verdadero si gano
+                  listaCapturados: response['NuevaListaCapturados'],
+              });            
+          } else {
+                this.setState({
+                    waiting: false
+                });
+          }
+      });
+
       //}
     }
 
+    else{
     const queryS = "flick(" + gridS + "," + fila + "," + columna + "," + color + ",Grid," + JSON.stringify(this.state.listaCapturados).replaceAll('"', "") + ",NuevaListaCapturados,CantCapturados)";
     //console.log(queryS);
     this.setState({
@@ -113,7 +137,7 @@ class Game extends React.Component {
       if (success) {
           this.state.historial.push(color)
           this.setState({
-          grid: response['Grid'],
+            grid: response['Grid'],
           turns: this.state.turns + 1,
           waiting: false,
           cantidadDeCapturados: response['CantCapturados'],
@@ -132,7 +156,8 @@ class Game extends React.Component {
       }
     });
   }
- 
+  }
+
   // funcion del origen
   origenSeleccionado(pos){
       this.setState({
