@@ -4,6 +4,61 @@
 	]).
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% getGrillasDeUnNivel( +Grid, +X, +Y, +ColorActual, +ListaCapturados,
+% 					+ SecuenciaColores, -NewSecuenciaColores, ListaDeGrillas):-
+% 
+% El parámetro ListaCapturados es mejor recibirlo por parámetro CREO.
+% Lo podemos calcular acá mismo, pero sería al pedo otra vez pedirlo. Sería mejor recibirlo por parámetro
+% CONSULTA DE EJEMPLO: 
+% init3(Grid), getGrillasDeUnNivel(Grid,0,0,y,[[0,0]],NewListaCapturados,[y], NewSecuenciaColores, ListaDeGrillas)
+%getGrillasPorNivel(Grid,X,Y,ColorActual,ListaCapturados,
+%                    NewListaCapturados,SecuenciaColores,NewSecuenciaColores,ListaDeGrillas):-
+getGrillasPorNivel(Grid,X,Y,ColorActual,SecuenciaColores,NewSecuenciaColores,ListaDeGrillas):-
+    		
+            adyCStar([X,Y],Grid,ListaCapturados), % preguntar si lo calculamos acá o lo traemos por parámetro
+    		delete([r,v,p,g,y,b],ColorActual,ListaColores),           
+			findall(NewGrid, (
+                 		member(C,ListaColores),
+     			 		flick(Grid,X,Y,C,NewGrid,ListaCapturados,_NewListaCapturados,NewCantidadCapturados),
+        				length(ListaCapturados,CantidadCapturados),
+        		 		NewCantidadCapturados > CantidadCapturados,
+                        append(SecuenciaColores, [C], NewSecuenciaColores)
+        		), ListaDeGrillas).
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% estrategia(X,Y+Profundidad, -ListaColores, -NewCapturadas)
+%
+/*estrategia(X,Y,Grid,Profundidad,Lista,ColoresMejorJugada,NewCapturadas):-
+    	   
+    	%delete([r,p,g,b,y,v],Color, ListaColoresArbol),    	
+    	%recorrerColores([X,Y],Grid),
+    
+    	getColor([X,Y],Grid,ColorActual),
+    
+    	% obtenemos lista de grillas, y secuencia de colores
+    	getGrillasPorNivel(Grid,X,Y,ColorActual,SecuenciaColores,NewSecuenciaColores,ListaDeGrillas),
+    
+    	% chequear que profundidad sea distinta de cero
+    	% chequear que alguna grilla ya haya sido completada (ganamos)
+    	estrategia() % de cada tablero
+*/    
+    	
+%recorrerColores([Color|ListaColores], ):-
+%    	flick(Grid,X,Y,Color,NewGrid,ListaCapturados,NewListaCapturados,CantidadCapturados),
+    	
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% cincoColores(+Color,+Lista, -ListaColores)
+%
+%cincoColores(Color,Lista, ListaColores):-
+%    	delete(Lista,Color,ListaColores).
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 %iniciarConOrigenDefault(+Grid, +Color, -NewGrid, -NewListaCapturados, -CantidadCapturados):-
@@ -24,47 +79,6 @@ iniciarConOrigenDefault(Grid,Color,NewGrid,NewListaCapturados,CantidadCapturados
         reemplazarEnGrilla(Grid,[0,0],Color,NewGrid),
         adyCStar([0,0],NewGrid,NewListaCapturados),
         length(NewListaCapturados,CantidadCapturados).
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-% getGrillasDeUnNivel( +Grid, +X, +Y, +ColorActual, +ListaCapturados,+ SecuenciaColores, -NewSecuenciaColores, ListaDeGrillas):-
-% 
-% El parámetro ListaCapturados es mejor recibirlo por parámetro CREO.
-% Lo podemos calcular acá mismo, pero sería al pedo otra vez pedirlo. Sería mejor recibirlo por parámetro
-% CONSULTA DE EJEMPLO: init3(Grid), getGrillasDeUnNivel(Grid,0,0,y,[[0,0]],NewListaCapturados,[y], NewSecuenciaColores, ListaDeGrillas)
-getGrillasDeUnNivel(Grid,X,Y,ColorActual,ListaCapturados, NewListaCapturados,SecuenciaColores,NewSecuenciaColores,ListaDeGrillas):-
-              
-    	delete([r,v,p,g,y,b],ColorActual,ListaColores),           
-			findall(NewGrid, (
-                 		member(C,ListaColores),
-     			 		flick(Grid,X,Y,C,NewGrid,ListaCapturados,NewListaCapturados,NewCantidadCapturados),
-        				length(ListaCapturados,CantidadCapturados),
-        		 		NewCantidadCapturados > CantidadCapturados,
-                        append(SecuenciaColores, C, NewSecuenciaColores)
-        		), ListaDeGrillas).
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-% estrategia(X,Y+Profundidad, -ListaColores, -NewCapturadas)
-%
-%estrategia(X,Y,Grid,Profundidad,Lista,ColoresMejorJugada,NewCapturadas):-
-%    	getColor([X,Y],Grid,Color),   
-%    	delete([r,p,g,b,y,v],Color, ListaColoresArbol),    	
-%    	recorrerColores([X,Y],Grid).                      
-    
-    	
-%recorrerColores([Color|ListaColores], ):-
-%    	flick(Grid,X,Y,Color,NewGrid,ListaCapturados,NewListaCapturados,CantidadCapturados),
-    	
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-% cincoColores(+Color,+Lista, -ListaColores)
-%
-%cincoColores(Color,Lista, ListaColores):-
-%    	delete(Lista,Color,ListaColores).
-
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -237,3 +251,4 @@ reemplazarEnLista(Indice, Lista, NewElement, NewList) :-
 getColor([X,Y], Grid, C):-
     nth0(X, Grid, F),
     nth0(Y, F, C).  
+
