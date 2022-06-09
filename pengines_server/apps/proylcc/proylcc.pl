@@ -3,21 +3,27 @@
 		flick/8
 	]).
 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% éste predicado sirve para cuando el usuario no elige una celda de origen
-inicializarOrigenDefault(Grid,Color,Grid,NewListaCapturados,CantidadCapturados):-
+%iniciarConOrigenDefault(+Grid, +Color, -NewGrid, -NewListaCapturados, -CantidadCapturados):-
+%
+% Grid es la grilla actual.
+% Color es el color elegido por el usuario, sin que haya elegido un origen,
+%       por lo tanto por defecto el origen es el 0,0.
+% Si Color es el mismo que el del origen, entonces retorno Grid,
+%       caso contrario retorno NewGrid
+% NewListaCapturados retorna la nueva lista de celdas capturadas
+% En CantidadCapturados retorna la cantidad de celdas capturadas 
+iniciarConOrigenDefault(Grid,Color,Grid,NewListaCapturados,CantidadCapturados):-
         getColor([0,0],Grid,Color),
         !,
         adyCStar([0,0],Grid,NewListaCapturados),
         length(NewListaCapturados,CantidadCapturados).
-
-inicializarOrigenDefault(Grid,Color,NewGrid,NewListaCapturados,CantidadCapturados):-
+iniciarConOrigenDefault(Grid,Color,NewGrid,NewListaCapturados,CantidadCapturados):-
         reemplazarEnGrilla(Grid,[0,0],Color,NewGrid),
         adyCStar([0,0],NewGrid,NewListaCapturados),
         length(NewListaCapturados,CantidadCapturados).
-
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -63,13 +69,12 @@ getGrillasDeUnNivel(Grid,X,Y,ColorActual,ListaCapturados, NewListaCapturados,Sec
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% inicializar(+Grid, +X, +Y, -Color, -NewListaCapturados, -CantidadCapturados):- 
+% iniciarConOrigenSeleccionado(+Grid, +X, +Y, -Color, -NewListaCapturados, -CantidadCapturados):- 
 % 
 % En X,Y recibe las coordenadas de origen para el inicio del juego
 % En NewListaCapturados retorno la lista de celdas capturadas 
 % En CantidadCapturados retorna la cantidad de celdas capturadas 
-
-inicializar(Grid,X,Y,Color,NewListaCapturados,CantidadCapturados):-
+iniciarConOrigenSeleccionado(Grid,X,Y,Color,NewListaCapturados,CantidadCapturados):-
 
 		% Obtengo el color de la celda origen y la retorno para agregarla al historial
 		getColor([X,Y],Grid,Color),

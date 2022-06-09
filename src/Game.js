@@ -106,7 +106,7 @@ class Game extends React.Component {
         origen: [0,0]
       })
       const gridS = JSON.stringify(this.state.grid).replaceAll('"', "");
-      const querySInit = "inicializarOrigenDefault(" + gridS + "," +color + ",NewGrid,NuevaListaCapturados,CantCapturados)";
+      const querySInit = "iniciarConOrigenDefault(" + gridS + "," +color + ",NewGrid,NuevaListaCapturados,CantCapturados)";
       this.setState({
           waiting: true
       });
@@ -171,7 +171,7 @@ class Game extends React.Component {
       const gridS = JSON.stringify(this.state.grid).replaceAll('"', "");
       const fila = pos[0];
       const columna = pos[1];
-      const queryS = "inicializar(" + gridS + "," + fila + "," + columna + ",Color,NuevaListaCapturados,CantCapturados)";
+      const queryS = "iniciarConOrigenSeleccionado(" + gridS + "," + fila + "," + columna + ",Color,NuevaListaCapturados,CantCapturados)";
       this.setState({
           waiting: true
       });
