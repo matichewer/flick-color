@@ -71,7 +71,9 @@ getGrillasDeUnNivel(Grid,X,Y,ColorActual,ListaCapturados, NewListaCapturados,Sec
 %
 % iniciarConOrigenSeleccionado(+Grid, +X, +Y, -Color, -NewListaCapturados, -CantidadCapturados):- 
 % 
+% En Grid recibo la grilla actual
 % En X,Y recibe las coordenadas de origen para el inicio del juego
+% En Color retorno el color de la celda origen
 % En NewListaCapturados retorno la lista de celdas capturadas 
 % En CantidadCapturados retorna la cantidad de celdas capturadas 
 iniciarConOrigenSeleccionado(Grid,X,Y,Color,NewListaCapturados,CantidadCapturados):-
@@ -97,8 +99,8 @@ iniciarConOrigenSeleccionado(Grid,X,Y,Color,NewListaCapturados,CantidadCapturado
 flick(Grid,X,Y,Color,NewGrid,ListaCapturados,NewListaCapturados,CantidadCapturados):-
 
 			% Obtengo el color de la celda origen, y si es igual retorno falso
-    		getColor([X,Y],Grid,C),
-    		C \= Color,
+    		getColor([X,Y],Grid,Color),
+        C \= Color,
 
 			% Pinto las celdas que ya tenia capturadas
     		pintarCapturados(Grid,ListaCapturados,Color,NewGrid),
