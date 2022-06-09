@@ -1,7 +1,6 @@
 import React from 'react';
 import { colorToCss } from './Game';
 import "./index.css";
-import "./styles.css";
 
 class Square extends React.Component {
       render() {
