@@ -99,8 +99,8 @@ iniciarConOrigenSeleccionado(Grid,X,Y,Color,NewListaCapturados,CantidadCapturado
 flick(Grid,X,Y,Color,NewGrid,ListaCapturados,NewListaCapturados,CantidadCapturados):-
 
 			% Obtengo el color de la celda origen, y si es igual retorno falso
-    		getColor([X,Y],Grid,Color),
-        C \= Color,
+    		getColor([X,Y],Grid,C),
+        	C \= Color,
 
 			% Pinto las celdas que ya tenia capturadas
     		pintarCapturados(Grid,ListaCapturados,Color,NewGrid),
