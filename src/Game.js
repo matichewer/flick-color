@@ -155,13 +155,13 @@ class Game extends React.Component {
           complete: response['CantCapturados']===196, // complete es Verdadero si gano
           listaCapturados: response['NuevaListaCapturados'],
         });
-        
+
         // si ganamos mostramos un aviso
         if(this.state.complete){   
 
             Swal.fire({
               title: "¡Felicitaciones!",
-              text: "Ganaste con " + this.state.turns + " turnos",
+              text: "Ganaste con " + this.state.turns + " turnos.",
               icon: "success",
             }).then(() => {
                 window.location.reload()      
