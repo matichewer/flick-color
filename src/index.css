@@ -1,10 +1,10 @@
-*{
+* {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-.header{
+.header {
   padding: 2rem;
   display: flex;
   width: 100%;
@@ -15,13 +15,13 @@
   color: white;
 }
 
-.header-titulo{
+.header-titulo {
   padding-right: 15%;
   text-transform: uppercase;
   font-weight: 800;
 }
 
-.header-alumnos{
+.header-alumnos {
   padding-left: 15%;
 }
 
@@ -34,17 +34,36 @@ body {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  margin-left:15%;
+  margin-left: 15%;
   margin-right: 15%;
-  padding-top:2rem;
+  padding-top: 2rem;
 }
 
-.panelControl{
+.panelControl {
+  display: flex;
   border: solid;
   border-color: black;
   margin-top: 20px;
   justify-content: center;
-  height: 560px;
+}
+
+@media screen and (max-width: 1000px) {
+  .game {
+    flex-direction: column;
+    margin-left: 0;
+    margin-right: 0;
+    align-items: center;
+  }
+  .panelControl {
+    flex-direction: row;  
+  }
+}
+
+@media screen and (min-width: 1001px) {
+  .panelControl {
+    flex-direction: column;
+    height: 560px;
+  }
 }
 
 .leftPanel {
@@ -82,7 +101,7 @@ body {
   color: darkblue;
 }
 
-.turnsNum{
+.turnsNum {
   margin-top: 10px;
   padding: 1rem;
   border: solid;
@@ -97,54 +116,54 @@ body {
 }
 
 .capturados {
-  display:flex;
+  display: flex;
   align-items: center;
   color: red;
   flex-direction: column;
   margin: 20px;
- font-size: 20px;
+  font-size: 20px;
 }
 
-.historial{
+.historial {
   align-items: center;
-  display:flex;
+  display: flex;
   color: black;
   flex-direction: column;
   margin-top: 40px;
   font-size: 40px;
   margin: 20px;
   border: solid;
-  border-color:black;
+  border-color: black;
   padding: 1rem;
 }
 
-.celdaOrigen{
+.celdaOrigen {
   border: 3px solid black;
 }
 
-.squaresHistorial{
+.squaresHistorial {
   height: 20px;
   width: 60px;
   border: 1px solid black;
 }
 
-.BotonAyuda{
+.BotonAyuda {
   padding: 0.5rem;
   margin-left: 40%;
   margin-top: 1rem;
 }
 
-.capturadosNum{
+.capturadosNum {
   margin-top: 1rem;
   border: solid;
-  border-color:black;
-  padding:1rem;
+  border-color: black;
+  padding: 1rem;
 }
 
-.footer{
+.footer {
   margin-top: 1rem;
   background-color: rgb(0, 0, 0);
-  color:white;
+  color: white;
   width: 100%;
   height: 40px;
   display: flex;
@@ -152,13 +171,13 @@ body {
   align-items: center;
   padding: 2rem;
   position: fixed;
-  left:0px;
-  bottom:0px;
+  left: 0px;
+  bottom: 0px;
 }
 
-.estrategia{
+.estrategia {
   align-items: center;
-  display:flex;
+  display: flex;
   color: black;
   flex-direction: column;
   margin-top: 40px;
