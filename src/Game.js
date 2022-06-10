@@ -3,6 +3,13 @@ import PengineClient from './PengineClient';
 import Board from './Board';
 import Square from './Square';
 
+// ES6 Modules or TypeScript
+//import Swal from 'sweetalert2'
+
+// CommonJS
+const Swal = require('sweetalert2')
+
+
 /**
  * List of colors.
  */
@@ -94,7 +101,7 @@ class Game extends React.Component {
     }
     */
 
-  
+
     if (this.state.listaCapturados.length === 0) {
       //if (this.state.origen){
         //this.state.listaCapturados.push(JSON.stringify(this.state.origen).replaceAll('"', ""));
@@ -148,10 +155,19 @@ class Game extends React.Component {
           complete: response['CantCapturados']===196, // complete es Verdadero si gano
           listaCapturados: response['NuevaListaCapturados'],
         });
+        
         // si ganamos mostramos un aviso
-        if(this.state.complete){
-          alert("Felicitaciones, Ganaste!")
-        } 
+        if(this.state.complete){   
+
+            Swal.fire({
+              title: "¡Felicitaciones!",
+              text: "Ganaste con " + this.state.turns + " turnos",
+              icon: "success",
+            }).then(() => {
+                window.location.reload()      
+            });
+
+        }        
       } else {
         // Prolog query will fail when the clicked color coincides with that in the top left cell.
         this.setState({
