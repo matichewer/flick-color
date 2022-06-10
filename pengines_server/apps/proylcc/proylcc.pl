@@ -7,7 +7,8 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% getGrillasDeUnNivel( +Grid, +X, +Y, +ColorActual, +ListaCapturados,
+% ORREGIRRRRRRRRRRRRRRR
+% getGrillasDeUnNivel( +Grid, +[X,Y], +ColorActual, +ListaCapturados, 
 % 					+ SecuenciaColores, -NewSecuenciaColores, ListaDeGrillas):-
 % 
 % El parámetro ListaCapturados es mejor recibirlo por parámetro CREO.
