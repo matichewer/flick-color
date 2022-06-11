@@ -5,58 +5,114 @@
 
 
 
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% ORREGIRRRRRRRRRRRRRRR
-% getGrillasDeUnNivel( +Grid, +[X,Y], +ColorActual, +ListaCapturados, 
+% getGrillasDeUnNivel( +Grid, +[X,Y], +ColorActual, +ListaCapturados,
 % 					+ SecuenciaColores, -NewSecuenciaColores, ListaDeGrillas):-
 % 
 % El parámetro ListaCapturados es mejor recibirlo por parámetro CREO.
 % Lo podemos calcular acá mismo, pero sería al pedo otra vez pedirlo. Sería mejor recibirlo por parámetro
 % 
-% CONSULTA DE EJEMPLO: 
-% 	init3(Grid), getInformacionDeNivel(Grid,[0,0],[[0,0]],[y],Resultado).
-getInformacionDeNivel(Grid,[X,Y],ListaCapturados,SecuenciaColores,Resultado):-
+% CONSULTA DE EJEMPLO
+% 	init3(Grid), getInformacionDeNivel([Grid,[0,0],[[0,0]],[y]],Resultado).
+getInformacionDeNivel([Grid,[X,Y],ListaCapturados,SecuenciaColores,Profundidad],Resultado):-
     		    		
+    		% recalculamos la profundidad restante
+    		NewProfundidad is Profundidad+1,
+    
+    		% Obtenemos el color actual
     		getColor([X,Y],Grid,ColorActual),
-        	length(ListaCapturados,CantidadCapturados),
-    		delete([r,v,p,g,y,b],ColorActual,ListaColores),           
-			findall([NewGrids,NewSecuenciaColores,NewListaCapturados], (
-                 		member(C,ListaColores),
-     			 		flick(Grid,X,Y,C,NewGrids,ListaCapturados,NewListaCapturados,NewCantidadCapturados),
+    
+    		% Borramos el color actual de la lista de colores
+    		delete([r,v,p,g,y,b],ColorActual,ListaColores), 
+    
+    		% Calculamos el tamaño de la lista de celdas capturadas
+        	length(ListaCapturados,CantidadCapturados),  
+    		
+    		% Obtenemos todos los resultados del nivel
+			findall([NewGrid,[X,Y],NewListaCapturados,NewSecuenciaColores,NewProfundidad], (
+                 		member(Color,ListaColores),
+     			 		flick(Grid,X,Y,Color,NewGrid,ListaCapturados,NewListaCapturados,NewCantidadCapturados),
         		 		NewCantidadCapturados > CantidadCapturados,
-                        append(SecuenciaColores, [C], NewSecuenciaColores)
+                        append(SecuenciaColores, [Color], NewSecuenciaColores)
         		), Resultado).
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-% estrategia(X,Y+Profundidad, -ListaColores, -NewCapturadas)
-%
-/*estrategia(X,Y,Grid,Profundidad,Lista,ColoresMejorJugada,NewCapturadas):-
-    	   
-    	%delete([r,p,g,b,y,v],Color, ListaColoresArbol),    	
-    	%recorrerColores([X,Y],Grid),
-    
-    	getColor([X,Y],Grid,ColorActual),
-    
-    	% obtenemos lista de grillas, y secuencia de colores
-    	getGrillasPorNivel(Grid,X,Y,ColorActual,SecuenciaColores,NewSecuenciaColores,ListaDeGrillas),
-    
-    	% chequear que profundidad sea distinta de cero
-    	% chequear que alguna grilla ya haya sido completada (ganamos)
-    	estrategia() % de cada tablero
-*/    
+% formato de la info q movemos: [Grid,Origen,ListaCapturados,SecuenciaColores,Profundidad]
+
+/* CONSULTA:
+init3(Grid), 
+estrategia([[Grid,[0,0], [[0,0]], [],0]], 1,Resultado).
+*/
+
+% No hay que recorrer mas nada
+estrategia([], _Profundidad, []).
+
+% Ya es una partida ganada
+estrategia([Resultado|Resultados], Profundidad, [Resultado | ResultadoFinal]) :-
+    Resultado = [_Grid, _XY, ListaCapturados, _SecuenciaColores,_Prof],
+    length(ListaCapturados, 196),
+    !, 
+	estrategia(Resultados,Profundidad , ResultadoFinal).
+
+% Ya recorrimos toda la profundidad
+estrategia([Resultado | Resultados],Profundidad, [Resultado | ResultadoFinal]) :-
+    Resultado = [_Grid, _XY, _ListaCapturados, _SecuenciaColores,Profundidad],
+    !, 
+	estrategia(Resultados,Profundidad, ResultadoFinal).
+
+% El juego no ha terminado, ni se terminó de recorrer en profundidad
+estrategia([Resultado|Resultados],Profundidad, NewTodosLosResultados) :-
+	getInformacionDeNivel(Resultado, NewResultado),
+    append(Resultados, NewResultado, TodosLosResultados),
+    estrategia(TodosLosResultados,Profundidad, NewTodosLosResultados).
+
+
+
+/* CONSULTA:
+
+Profundidad = 2,
+init3(Grid),
+X=0, Y=0,
+adyCStar([X,Y],Grid,ListaCapturados),
+botonAyuda(Grid, [0,0], ListaCapturados,Profundidad, SecuenciaColores, CantidadAdyacentes). 
+
+*/
+
+% botonAyuda( +Grid, +Origen, +ListaCapturados, +Profundidad, -Secuencia, -CantidadAdyacentes):-
+botonAyuda(Grid, Origen, ListaCapturados,Profundidad, SecuenciaColores, CantidadAdyacentes):-
     	
-%recorrerColores([Color|ListaColores], ):-
-%    	flick(Grid,X,Y,Color,NewGrid,ListaCapturados,NewListaCapturados,CantidadCapturados),
-    	
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-% cincoColores(+Color,+Lista, -ListaColores)
-%
-%cincoColores(Color,Lista, ListaColores):-
-%    	delete(Lista,Color,ListaColores).
+    	% [Grid,Origen,ListaCapturados,SecuenciaColores,ProfInicial]
+    estrategia([ [Grid,Origen,ListaCapturados,[],0] ], Profundidad, TodosLosResultados),
+    
+    mejorResultado(TodosLosResultados, R),
+    R = [_Grid,_Origen,NewListaCapturados,SecuenciaColores, _ProfInicial],
+    length(NewListaCapturados,CantidadAdyacentes).
+    
+
+% Asumimos que el primer resultado es el mejor
+mejorResultado([MejorActual|Resultados],MejorTotal):- mejorResultadoAux([MejorActual| Resultados], MejorActual, MejorTotal).
+
+% Comparamos con todos los resultados
+mejorResultadoAux([], MejorActual, MejorActual).
+
+mejorResultadoAux([Resultado|Resultados], MejorActual, MejorTotal):-
+    	getMejorSecuencia(Resultado, MejorActual, MejorLocal), 
+   		mejorResultadoAux(Resultados,MejorLocal, MejorTotal).
+
+% Comparamos la cantidad de celdas capturadas de 2 resultados
+getMejorSecuencia(Resultado1,Resultado2,Resultado1):-
+    	Resultado1 = [_Grid1,_Origen1,ListaCapturados1,_SecuenciaColores1,_ProfInicial1],
+    	Resultado2 = [_Grid2,_Origen2,ListaCapturados2,_SecuenciaColores2,_ProfInicial2],
+    	length(ListaCapturados1, Tamaño1),
+    	length(ListaCapturados2, Tamaño2),
+    	Tamaño1 > Tamaño2,
+    	!.
+getMejorSecuencia(_Resultado1,Resultado2,Resultado2).    	
+
+  
 
 
 
@@ -252,4 +308,3 @@ reemplazarEnLista(Indice, Lista, NewElement, NewList) :-
 getColor([X,Y], Grid, C):-
     nth0(X, Grid, F),
     nth0(Y, F, C).  
-
