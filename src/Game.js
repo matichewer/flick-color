@@ -217,7 +217,7 @@ handleHelp(){
     if (!this.state.origen){
         Swal.fire({
           title: "Error",
-          text: "Primero seleccione un origen para emepezar a jugar.",
+          text: "Primero seleccione un origen para empezar a jugar.",
           icon: "error",
         })
     }
