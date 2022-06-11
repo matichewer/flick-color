@@ -45,6 +45,8 @@ class Game extends React.Component {
       historial: [], // historial de colores
       origen: undefined, // celda de origen
       listaCapturados: [],
+      ayudaSecuenciaColores: [],
+      ayudaCapturados: 0,
     };
     this.handleClick = this.handleClick.bind(this);
     this.origenSeleccionado = this.origenSeleccionado.bind(this);
@@ -208,11 +210,46 @@ class Game extends React.Component {
           }
       });
   }
+//handleChange(event){this.setState({estrategia:event.target.value});}
+// boton ayuda
+handleHelp(){
 
-handleChange(event){this.setState({estrategia:event.target.value});}
+    if (!this.state.origen){
+        Swal.fire({
+          title: "Error",
+          text: "Primero seleccione un origen para emepezar a jugar.",
+          icon: "error",
+        })
+    }
+    else{
+        var profundidad = parseInt(document.getElementById("profundidad").value);
 
-
-handleHelp(){}; // boton ayuda
+        const gridS = JSON.stringify(this.state.grid).replaceAll('"', "");
+        const origen = JSON.stringify(this.state.origen).replaceAll('"', "");
+        const capturados = JSON.stringify(this.state.listaCapturados).replaceAll('"', "");
+        
+        // botonAyuda( +Grid, +Origen, +ListaCapturados, +Profundidad, -Secuencia, -CantidadAdyacentes):-
+        const queryS = "botonAyuda(" + gridS + ","+ origen+","+ capturados+","+ profundidad+", SecuenciaColores, NewCantidadAdyacentes)";
+        console.log(queryS);
+        this.setState({
+            waiting: true
+        });
+        this.pengine.query(queryS, (success, response) => {   
+            if (success) {
+                this.setState({
+                    waiting: false,
+                    ayudaSecuenciaColores: response['SecuenciaColores'],
+                    ayudaCapturados: response['NewCantidadAdyacentes'],
+                });            
+            } else {
+                  this.setState({
+                      waiting: false
+                    });
+              }
+          });
+    }
+  }
+ 
 
   render() {
     if (this.state.grid === null) {
@@ -242,9 +279,23 @@ handleHelp(){}; // boton ayuda
             </div> 
             <div className="estrategia">
               <div className="profundidadLab">Estrategia</div>
-              <input className="profundidadNum" type='number' min= "1" max="30" defaultValue="1"/> 
+              <input className="profundidadNum" type='number' id="profundidad" min= "1" max="30" defaultValue="1"/> 
               <button className='BotonAyuda' onClick={() => this.handleHelp()}>Ayuda</button>
+              <div className="capturadosEstrategia">{this.state.ayudaCapturados}</div>
             </div>   
+
+            <div className="ayuda">
+              <div className="ayudaLab">Mejor estrategia</div>    
+                  <div className="stateAyuda">{this.state.ayudaSecuenciaColores.map((colorS,i)=>
+                      <Square
+                        className={"squaresAyuda"}
+                        value={colorS}
+                        key={i}                    
+                      />)}
+                  </div>
+            </div> 
+
+
         </div>
         <Board 
             grid={this.state.grid} 

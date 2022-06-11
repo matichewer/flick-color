@@ -106,9 +106,9 @@ mejorResultadoAux([Resultado|Resultados], MejorActual, MejorTotal):-
 getMejorSecuencia(Resultado1,Resultado2,Resultado1):-
     	Resultado1 = [_Grid1,_Origen1,ListaCapturados1,_SecuenciaColores1,_ProfInicial1],
     	Resultado2 = [_Grid2,_Origen2,ListaCapturados2,_SecuenciaColores2,_ProfInicial2],
-    	length(ListaCapturados1, Tamaño1),
-    	length(ListaCapturados2, Tamaño2),
-    	Tamaño1 > Tamaño2,
+    	length(ListaCapturados1, Tamanio1),
+    	length(ListaCapturados2, Tamanio2),
+    	Tamanio1 > Tamanio2,
     	!.
 getMejorSecuencia(_Resultado1,Resultado2,Resultado2).    	
 
