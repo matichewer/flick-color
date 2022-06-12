@@ -3,9 +3,6 @@ import PengineClient from './PengineClient';
 import Board from './Board';
 import Square from './Square';
 
-// ES6 Modules or TypeScript
-//import Swal from 'sweetalert2'
-
 // CommonJS
 const Swal = require('sweetalert2')
 
@@ -130,7 +127,6 @@ class Game extends React.Component {
 
     else{
         const queryS = "flick(" + gridS + "," + fila + "," + columna + "," + color + ",Grid," + JSON.stringify(this.state.listaCapturados).replaceAll('"', "") + ",NuevaListaCapturados,CantCapturados)";
-        //console.log(queryS);
         this.setState({
           waiting: true
         });
@@ -138,29 +134,25 @@ class Game extends React.Component {
           if (success) {
               this.state.historial.push(color)
               this.setState({
-              grid: response['Grid'],
-              turns: this.state.turns + 1,
-              waiting: false,
-              cantidadDeCapturados: response['CantCapturados'],
-              complete: response['CantCapturados']===196, // complete es Verdadero si gano
-              listaCapturados: response['NuevaListaCapturados'],
-            });
+                  grid: response['Grid'],
+                  turns: this.state.turns + 1,
+                  waiting: false,
+                  cantidadDeCapturados: response['CantCapturados'],
+                  complete: response['CantCapturados']===196, // complete es Verdadero si gano
+                  listaCapturados: response['NuevaListaCapturados'],
+              });
 
-            // si ganamos mostramos un aviso
-            if(this.state.complete){   
-                Swal.fire({
-                  title: "¡Felicitaciones!",
-                  text: "Ganaste con " + this.state.turns + " turnos.",
-                  icon: "success",
-                })
-                this.registrarRecord();
-                /*
-                .then(() => {
-                    window.location.reload()      
-                });
-                */
-
-            }        
+              // si ganamos mostramos un aviso
+              if(this.state.complete){  
+                  this.registrarRecord(); 
+                  Swal.fire({
+                    title: "¡Felicitaciones!",
+                    text: "Ganaste con " + this.state.turns + " turnos.",
+                    icon: "success",
+                  }).then(() => {
+                      window.location.reload()      
+                  });
+              }        
           } else {
             // Prolog query will fail when the clicked color coincides with that in the top left cell.
             this.setState({
@@ -170,39 +162,7 @@ class Game extends React.Component {
         });
       }
     }
-
-
-    registrarRecord(){    
-          const queryRecord = "newRecord(" + this.state.nombreJugador + "," + this.state.turns +", AllRecords)."
-          console.log(queryRecord)
-          this.setState({
-              waiting: true
-          });
-          this.pengine.query(queryRecord, (success, response) => {    
-            if (success) {
-                this.setState({
-                  waiting: false,
-                  records: response['AllRecords'],
-              });
-            }  });
-      console.log("Records obtenidos en la funcion: "+ this.state.records)
-  }
-
   
-  async getNombre(){
-
-          const { value: nombre } = await Swal.fire({
-            title: '¡Bienvenido a Flick Color!',
-            input: 'text',
-            inputLabel: 'Ingrese su nombre para poder registrar su puntuación',
-          })
-
-          this.setState({
-              nombreJugador: nombre
-          }); 
-  }
-
-
   // funcion del origen
   origenSeleccionado(pos){
       this.setState({
@@ -236,7 +196,6 @@ class Game extends React.Component {
 
 // boton ayuda
 handleHelp(){
-
     if (!this.state.origen){
         Swal.fire({
           title: "Error",
@@ -267,9 +226,7 @@ handleHelp(){
 
         const gridS = JSON.stringify(this.state.grid).replaceAll('"', "");
         const origen = JSON.stringify(this.state.origen).replaceAll('"', "");
-        const capturados = JSON.stringify(this.state.listaCapturados).replaceAll('"', "");
-        
-        // botonAyuda( +Grid, +Origen, +ListaCapturados, +Profundidad, -Secuencia, -CantidadAdyacentes):-
+        const capturados = JSON.stringify(this.state.listaCapturados).replaceAll('"', "");        
         const queryS = "botonAyuda(" + gridS + ","+ origen+","+ capturados+","+ profundidad+", SecuenciaColores, NewCantidadAdyacentes)";
         this.setState({
             waiting: true
@@ -292,11 +249,28 @@ handleHelp(){
             } else {
                   this.setState({
                       waiting: false
-                    });
-              }
-          });
+                  });
+            }
+        });
     }
   } 
+
+
+  registrarRecord(){    
+    const queryRecord = "newRecord(" + this.state.nombreJugador + "," + this.state.turns +", AllRecords)."
+    console.log(queryRecord)
+    this.setState({
+        waiting: true
+    });
+    this.pengine.query(queryRecord, (success, response) => {    
+      if (success) {
+          this.setState({
+            waiting: false,
+            records: response['AllRecords'],
+        });
+      }  });
+    console.log("Records obtenidos en la funcion: "+ this.state.records)
+  }
 
   getRecords(){         
     const queryS = "getRecords(Records)";
@@ -312,9 +286,18 @@ handleHelp(){
       }
     })
     console.log("los records en la función: " + this.state.records);
-}
+  }
 
-
+  async getNombre(){
+    const { value: nombre } = await Swal.fire({
+      title: '¡Bienvenido a Flick Color!',
+      input: 'text',
+      inputLabel: 'Ingrese su nombre para poder registrar su puntuación',
+    })
+    this.setState({
+        nombreJugador: nombre
+    }); 
+  }
 
 
   render() {
@@ -402,6 +385,7 @@ handleHelp(){
               </tbody>
             </table>
         </div>
+
 
 
       </div>

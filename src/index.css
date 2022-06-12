@@ -27,13 +27,8 @@
 
 body {
   font: 14px "Century Gothic", Futura, sans-serif;
- /* background-color: #9a6cee;*/
- /*background-color: #ee916c;*/
- /*background-color: #e7d8a7;*/
-  background: linear-gradient(to right, orange, pink);
- /*background: linear-gradient(top, black, white);
-*/
- height: 50%;
+  background: linear-gradient(to right, rgb(253, 191, 76), pink);
+  height: 50%;
 }
 
 .game {
@@ -46,9 +41,6 @@ body {
 }
 
 .panelControl{
-  /*border: solid;*/
-  /*border-color: black;*/
- /* margin-top: 20px;*/
   justify-content: center;
   height: 660px;
 }
@@ -182,12 +174,7 @@ body {
   padding: 0.5rem;
   margin-top: 0.5rem;
 }
-/*
-.ayuda{
-  padding-top: 0rem;
-  flex-direction: row;
-}
-*/
+
 .ayudaLab{
   align-items: stretch;
   display:flex;

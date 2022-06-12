@@ -1,7 +1,6 @@
 :- module(proylcc, [flick/8, newRecord/3, getRecords/1]).
 
 :- dynamic ganador/2.
-
 % las siguientes 4 lineas de codigo sirven para tener persistencia en los asserts
 /*
 :- use_module(library(persistency)).
@@ -11,132 +10,116 @@ init:- absolute_file_name('ganadores.db', File, [access(write)]), db_attach(File
 */
 
 
-% el usuario no existe en la base de datos, por lo tanto registramos su puntuacion
-newRecord(Nick,NewTurnos,NewRecords):-      		
-           not(ganador(Nick,_)),           
-           assert(ganador(Nick,NewTurnos)),
-    		getRecords(NewRecords),
-    	   !.
-% el usuario ya existe en la base de datos
-newRecord(Nick,NewTurnos,NewRecords):-  
-      % buscamos su puntuacion
-      ganador(Nick,OldTurnos),
-      % solo registramos su puntuacion si hizo un record
-      NewTurnos < OldTurnos,
-      retract(ganador(Nick,OldTurnos)),
-      assert(ganador(Nick,NewTurnos)),    
-   	  getRecords(NewRecords).
-
-% obtengo una tabla con todos los records
-getRecords(RecordsOrdenados):-
-    	% busco todos los ganadores
-    	findall([Nick,Turnos],
-                		ganador(Nick,Turnos),
-      			RecordsDesordenados),
-    	% ordeno los ganadores segun sus turnos (de menor a mayor)
-		sort(2, @<, RecordsDesordenados, RecordsOrdenados).
-
-
-
-
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% getGrillasDeUnNivel( +Grid, +[X,Y], +ColorActual, +ListaCapturados,
-% 					+ SecuenciaColores, -NewSecuenciaColores, ListaDeGrillas):-
+% botonAyuda( +Grid, +Origen, +ListaCapturados, +Profundidad, -SecuenciaColores, -CantidadAdyacentes)
+%
+% Grid es la grilla actual
+% Origen es la celda origen en formato [X,Y]
+% ListaCapturados es la lista actual de celdas capturadas
+% Profundidad es la profunidad estrategia de la ayuda que pide el usuario
+% SecuenciaColores es la secuencia de colores estrategia que le sugerimos al usuario
+% CantidadAdyacentes es la cantidas de celdas capturadas luego de realizar la secuencia de colores
+%
+botonAyuda(Grid, Origen, ListaCapturados, Profundidad, SecuenciaColores, CantidadAdyacentes):-    
+		estrategia([ [Grid,Origen,ListaCapturados,[],0] ], Profundidad, TodosLosResultados),		
+		mejorResultado(TodosLosResultados, R),
+		R = [_Grid,_Origen,NewListaCapturados,SecuenciaColores, _ProfInicial],
+		length(NewListaCapturados,CantidadAdyacentes).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% estrategia([ +[Grid,Origen,ListaCapturados,SecuenciaColores, ProfunidadActual] ], +ProfundidadFija, -NewResultados)
+%
+% Grid es la grilla actual
+% Origen es la celda origen en formato [X,Y]
+% ListaCapturados es la lista actual de celdas capturadas
+% SecuenciaColores es la secuencia de colores que vamos a calcular
+% ProfundidadActual es el nivel por el que va recorriendo la estrategia
+% ProfundidadFija es la profunidad estrategia de la ayuda que pide el usuario
+% NewResultados es la lista de todos los resultados previo a seleccionar el mejor camino 
+%
+% Caso base: terminó de recorrer la lista
+estrategia([], _ProfundidadFija, []).
+
+% Caso recursivo: el predicado termina cuando se logró capturar todas las celdas
+estrategia([R1|Rs], ProfundidadFija, [R1 | ResultadoFinal]) :-
+		R1 = [_Grid, _XY, ListaCapturados, _SecuenciaColores, _ProfActual],
+		length(ListaCapturados, 196),
+		!, 
+		estrategia(Rs,ProfundidadFija , ResultadoFinal).
+
+% Caso recursivo: ya recorrimos toda la profundidad
+estrategia([R1|Rs],ProfundidadFija, [R1 | ResultadoFinal]) :-
+    R1 = [_Grid, _XY, _ListaCapturados, _SecuenciaColores,ProfundidadFija],
+    !, 
+	estrategia(Rs,ProfundidadFija, ResultadoFinal).
+
+% Caso recursivo: el juego no ha terminado, ni se terminó de recorrer toda la profundidad
+estrategia([R1|Rs],ProfundidadFija, NewResultados) :-
+	getInformacionDeNivel(R1, InfoNivel),
+    append(Rs, InfoNivel, Resultados),
+    estrategia(Resultados,ProfundidadFija, NewResultados).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% getInformacionDeNivel( +[Grid,[X,Y],ListaCapturados,SecuenciaColores, ProfundidadActual], -Resultado):
+%
+% Grid es la grilla actual
+% [X,Y] es la celda origen
+% ListaCapturados es la lista actual de celdas capturadas
+% SecuenciaColores es la secuencia de colores que vamos a calcular
+% ProfundidadActual es el nivel por el que va recorriendo la estrategia
+% Resultado es la lista de toda la información de un nivel
 % 
-% El parámetro ListaCapturados es mejor recibirlo por parámetro CREO.
-% Lo podemos calcular acá mismo, pero sería al pedo otra vez pedirlo. Sería mejor recibirlo por parámetro
-% 
-% CONSULTA DE EJEMPLO
-% 	init3(Grid), getInformacionDeNivel([Grid,[0,0],[[0,0]],[y]],Resultado).
-getInformacionDeNivel([Grid,[X,Y],ListaCapturados,SecuenciaColores,Profundidad],Resultado):-
-    		    		
-    		% recalculamos la profundidad restante
-    		NewProfundidad is Profundidad+1,
-    
-    		% Obtenemos el color actual
+getInformacionDeNivel([Grid,[X,Y],ListaCapturados,SecuenciaColores,ProfundidadActual],Resultado):-
+    		NewProfundidad is ProfundidadActual+1,
     		getColor([X,Y],Grid,ColorActual),
-    
-    		% Borramos el color actual de la lista de colores
     		delete([r,v,p,g,y,b],ColorActual,ListaColores), 
-    
-    		% Calculamos el tamaño de la lista de celdas capturadas
         	length(ListaCapturados,CantidadCapturados),  
     		
-    		% Obtenemos todos los resultados del nivel
+    		% Obtenemos todos los resultados del nivel guardandolo en Resultado
 			findall([NewGrid,[X,Y],NewListaCapturados,NewSecuenciaColores,NewProfundidad], (
                  		member(Color,ListaColores),
      			 		flick(Grid,X,Y,Color,NewGrid,ListaCapturados,NewListaCapturados,NewCantidadCapturados),
         		 		NewCantidadCapturados > CantidadCapturados,
                         append(SecuenciaColores, [Color], NewSecuenciaColores)
-        		), Resultado).
+        	), Resultado).
 
 
-% formato de la info q movemos: [Grid,Origen,ListaCapturados,SecuenciaColores,Profundidad]
-
-/* CONSULTA:
-init3(Grid), 
-estrategia([[Grid,[0,0], [[0,0]], [],0]], 1,Resultado).
-*/
-
-% No hay que recorrer mas nada
-estrategia([], _Profundidad, []).
-
-% Ya es una partida ganada
-estrategia([Resultado|Resultados], Profundidad, [Resultado | ResultadoFinal]) :-
-    Resultado = [_Grid, _XY, ListaCapturados, _SecuenciaColores,_Prof],
-    length(ListaCapturados, 196),
-    !, 
-	estrategia(Resultados,Profundidad , ResultadoFinal).
-
-% Ya recorrimos toda la profundidad
-estrategia([Resultado | Resultados],Profundidad, [Resultado | ResultadoFinal]) :-
-    Resultado = [_Grid, _XY, _ListaCapturados, _SecuenciaColores,Profundidad],
-    !, 
-	estrategia(Resultados,Profundidad, ResultadoFinal).
-
-% El juego no ha terminado, ni se terminó de recorrer en profundidad
-estrategia([Resultado|Resultados],Profundidad, NewTodosLosResultados) :-
-	getInformacionDeNivel(Resultado, NewResultado),
-    append(Resultados, NewResultado, TodosLosResultados),
-    estrategia(TodosLosResultados,Profundidad, NewTodosLosResultados).
-
-
-
-/* CONSULTA:
-
-Profundidad = 2,
-init3(Grid),
-X=0, Y=0,
-adyCStar([X,Y],Grid,ListaCapturados),
-botonAyuda(Grid, [0,0], ListaCapturados,Profundidad, SecuenciaColores, CantidadAdyacentes). 
-
-*/
-
-% botonAyuda( +Grid, +Origen, +ListaCapturados, +Profundidad, -Secuencia, -CantidadAdyacentes):-
-botonAyuda(Grid, Origen, ListaCapturados,Profundidad, SecuenciaColores, CantidadAdyacentes):-
-    	
-    	% [Grid,Origen,ListaCapturados,SecuenciaColores,ProfInicial]
-    estrategia([ [Grid,Origen,ListaCapturados,[],0] ], Profundidad, TodosLosResultados),
-    
-    mejorResultado(TodosLosResultados, R),
-    R = [_Grid,_Origen,NewListaCapturados,SecuenciaColores, _ProfInicial],
-    length(NewListaCapturados,CantidadAdyacentes).
-    
-
-% Asumimos que el primer resultado es el mejor
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% mejorResultado( +[MejorActual|Resultados], -MejorTotal):
+%
+% MejorActual es el primer camino de la lista tomándolo como el mejor para luego comparar con el resto
+% Resultados es el resto de los caminos que aún no comparé
+% MejorTotal es el mejor camino obtenido luego de comparar con todos los caminos
+% 
 mejorResultado([MejorActual|Resultados],MejorTotal):- mejorResultadoAux([MejorActual| Resultados], MejorActual, MejorTotal).
 
-% Comparamos con todos los resultados
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% mejorResultadoAux( +[Resultado|Resultados], +MejorActual, -MejorTotal)
+%
+% Resultado es el primer camino de la lista tomándolo como el mejor para luego comparar con el resto
+% Resultados es el resto de los caminos que aún no comparé
+% MejorActual es el mejor resultado en el recorrido actual
+% MejorTotal es el mejor camino obtenido luego de comparar con todos los caminos
+% 
 mejorResultadoAux([], MejorActual, MejorActual).
 
 mejorResultadoAux([Resultado|Resultados], MejorActual, MejorTotal):-
     	getMejorSecuencia(Resultado, MejorActual, MejorLocal), 
-   		mejorResultadoAux(Resultados,MejorLocal, MejorTotal).
+   		mejorResultadoAux(Resultados, MejorLocal, MejorTotal).
 
-% Comparamos la cantidad de celdas capturadas de 2 resultados
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% getMejorSecuencia(+Resultado1, +Resultado2, +Resultado)
+%
+% Resultado1 y Resultado2 son los 2 caminos a comparar
+% Resultado es el que tiene la mayor cantidad de celdas capturadas entre Resultado1 y Resultado2
+% 
 getMejorSecuencia(Resultado1,Resultado2,Resultado1):-
     	Resultado1 = [_Grid1,_Origen1,ListaCapturados1,_SecuenciaColores1,_ProfInicial1],
     	Resultado2 = [_Grid2,_Origen2,ListaCapturados2,_SecuenciaColores2,_ProfInicial2],
@@ -145,11 +128,7 @@ getMejorSecuencia(Resultado1,Resultado2,Resultado1):-
     	Tamanio1 > Tamanio2,
     	!.
 getMejorSecuencia(_Resultado1,Resultado2,Resultado2).    	
-
-  
-
-
-
+ 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 %iniciarConOrigenDefault(+Grid, +Color, -NewGrid, -NewListaCapturados, -CantidadCapturados):-
@@ -171,7 +150,6 @@ iniciarConOrigenDefault(Grid,Color,NewGrid,NewListaCapturados,CantidadCapturados
         adyCStar([0,0],NewGrid,NewListaCapturados),
         length(NewListaCapturados,CantidadCapturados).
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 % iniciarConOrigenSeleccionado(+Grid, +X, +Y, -Color, -NewListaCapturados, -CantidadCapturados):- 
@@ -182,16 +160,9 @@ iniciarConOrigenDefault(Grid,Color,NewGrid,NewListaCapturados,CantidadCapturados
 % En NewListaCapturados retorno la lista de celdas capturadas 
 % En CantidadCapturados retorna la cantidad de celdas capturadas 
 iniciarConOrigenSeleccionado(Grid,X,Y,Color,NewListaCapturados,CantidadCapturados):-
-
-		% Obtengo el color de la celda origen y la retorno para agregarla al historial
 		getColor([X,Y],Grid,Color),
-
-		% Obtengo la nueva lista de celdas capturadas
 		adyCStar([X,Y],Grid,NewListaCapturados),
-
-		% Calculo la cantidad de celdas capturadas
 		length(NewListaCapturados,CantidadCapturados).
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -221,13 +192,10 @@ flick(Grid,X,Y,Color,NewGrid,ListaCapturados,NewListaCapturados,CantidadCapturad
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% INICIO ADYACENTES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-%%%%%%%%%%%%%%%%%% CODIGO SUPER EFICIENTE %%%%%%%%%%%%%%%%%%%%%%
-
 /*
  * adyCStar(Origin, +Grid, -Res)
  * Calcula el conjunto de celdas adyacentesC* de la celda Origin en la grilla Grid
- * siguiendo una estrategia de propa	gación o expansión.
+ * siguiendo una estrategia de propagación o expansión.
  */
 
 adyCStar(Origin, Grid, Res) :-
@@ -292,13 +260,6 @@ ady([X, Y], _Grid, [X, Y1]):-
     Y > 0,
     Y1 is Y - 1.
 
-%%%%%%%%%%%%%% FIN CODIGO SUPER EFICIENTE %%%%%%%%%%%%%%%
-
-
-
-
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 % pintarCapturados(+Grid, +[], +Color,-Grid)
@@ -341,4 +302,33 @@ reemplazarEnLista(Indice, Lista, NewElement, NewList) :-
 % Dada una grilla Grid, retorna el color C de una posicion (X,Y)
 getColor([X,Y], Grid, C):-
     nth0(X, Grid, F),
-    nth0(Y, F, C).  
+    nth0(Y, F, C). 
+
+
+
+	
+
+% el usuario no existe en la base de datos, por lo tanto registramos su puntuacion
+newRecord(Nick,NewTurnos,NewRecords):-      		
+           not(ganador(Nick,_)),           
+           assert(ganador(Nick,NewTurnos)),
+    		getRecords(NewRecords),
+    	   !.
+% el usuario ya existe en la base de datos
+newRecord(Nick,NewTurnos,NewRecords):-  
+      % buscamos su puntuacion
+      ganador(Nick,OldTurnos),
+      % solo registramos su puntuacion si hizo un record
+      NewTurnos < OldTurnos,
+      retract(ganador(Nick,OldTurnos)),
+      assert(ganador(Nick,NewTurnos)),    
+   	  getRecords(NewRecords).
+
+% obtengo una tabla con todos los records
+getRecords(RecordsOrdenados):-
+    	% busco todos los ganadores
+    	findall([Nick,Turnos],
+                		ganador(Nick,Turnos),
+      			RecordsDesordenados),
+    	% ordeno los ganadores segun sus turnos (de menor a mayor)
+		sort(2, @<, RecordsDesordenados, RecordsOrdenados).
