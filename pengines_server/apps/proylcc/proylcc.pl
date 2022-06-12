@@ -3,6 +3,43 @@
 		flick/8
 	]).
 
+:- dynamic ganador/2.
+
+% las siguientes 4 lineas de codigo sirven para tener persistencia en los asserts
+/*
+:- use_module(library(persistency)).
+:- persistent ganador(fact1:any, fact2:any).
+:- initialization(init).
+init:- absolute_file_name('ganadores.db', File, [access(write)]), db_attach(File, []).
+*/
+
+
+% el usuario no existe en la base de datos, por lo tanto registramos su puntuacion
+newRecord(Nick,NewTurnos,NewRecords):-      		
+           not(ganador(Nick,_)),           
+           assert(ganador(Nick,NewTurnos)),
+    		getRecords(NewRecords),
+    	   !.
+% el usuario ya existe en la base de datos
+newRecord(Nick,NewTurnos,NewRecords):-  
+      % buscamos su puntuacion
+      ganador(Nick,OldTurnos),
+      % solo registramos su puntuacion si hizo un record
+      NewTurnos < OldTurnos,
+      retract(ganador(Nick,OldTurnos)),
+      assert(ganador(Nick,NewTurnos)),    
+   	  getRecords(NewRecords).
+
+% obtengo una tabla con todos los records
+getRecords(RecordsOrdenados):-
+    	% busco todos los ganadores
+    	findall([Nick,Turnos],
+                		ganador(Nick,Turnos),
+      			RecordsDesordenados),
+    	% ordeno los ganadores segun sus turnos (de menor a mayor)
+		sort(2, @<, RecordsDesordenados, RecordsOrdenados).
+
+
 
 
 

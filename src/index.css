@@ -198,3 +198,17 @@ body {
   display: flex;
   grid-template-columns: auto auto auto;
 }
+
+
+.records{
+  align-items: center;
+  display:flex;
+  color: black;
+  flex-direction: column;
+  margin-top: 20px;
+  font-size: 15px;
+  margin: 20px;
+  border: solid;
+  border-color:black;
+  padding: 1rem;
+}

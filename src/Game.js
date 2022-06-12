@@ -47,36 +47,19 @@ class Game extends React.Component {
       listaCapturados: [],
       ayudaSecuenciaColores: [],
       ayudaCapturados: 0,
-      nombreJugador: undefined
+      nombreJugador: undefined,
+      records: [], // tabla de puntuaciones
     };
     this.handleClick = this.handleClick.bind(this);
     this.origenSeleccionado = this.origenSeleccionado.bind(this);
     this.handlePengineCreate = this.handlePengineCreate.bind(this);
     this.pengine = new PengineClient(this.handlePengineCreate);
 
-
-/*
-   // if( !this.state.nombreJugador ){
-      const { value: nombre } = Swal.fire({
-        title: '¡Bienvenido a Flick Color!',
-        input: 'text',
-        inputLabel: 'Ingresa tu nombre',
-      })
-  
-    //  if (nombre) {
-     //   Swal.fire(`Tu nombre es ${nombre}`)
-      //}
-  
-      console.log(nombre);
-      this.setState({
-          nombreJugador: nombre
-      });
-      //this.state.nombreJugador = nombre;
-  //}
-  */
+    this.getNombre();
   }
 
   handlePengineCreate() {
+    this.getRecords();
     const queryS = 'init(Grid)';
     this.pengine.query(queryS, (success, response) => {
       if (success) {
@@ -115,26 +98,8 @@ class Game extends React.Component {
     const columna = this.state.origen ? this.state.origen[1] : 0;
   
 
-    // ESTO DA WARNING: PREGUNTAR
-    //  this.state.origen = this.state.origen ? this.state.origen : [0,0];
-    /*
-    if (!this.state.origen){
-        this.setState({
-          origen: [0,0]
-        })
-    }
-    */
-
-
-
-
 
     if (this.state.listaCapturados.length === 0) {
-      //if (this.state.origen){
-        //this.state.listaCapturados.push(JSON.stringify(this.state.origen).replaceAll('"', ""));
-      //}
-      //else{
-        //this.state.listaCapturados.push([0,0]);
 
       this.setState({
         origen: [0,0]
@@ -161,55 +126,82 @@ class Game extends React.Component {
                 });
           }
       });
-
-      //}
     }
 
     else{
-    const queryS = "flick(" + gridS + "," + fila + "," + columna + "," + color + ",Grid," + JSON.stringify(this.state.listaCapturados).replaceAll('"', "") + ",NuevaListaCapturados,CantCapturados)";
-    //console.log(queryS);
-    this.setState({
-      waiting: true
-    });
-    this.pengine.query(queryS, (success, response) => {      
-      if (success) {
-          this.state.historial.push(color)
-          this.setState({
-            grid: response['Grid'],
-          turns: this.state.turns + 1,
-          waiting: false,
-          cantidadDeCapturados: response['CantCapturados'],
-          complete: response['CantCapturados']===196, // complete es Verdadero si gano
-          listaCapturados: response['NuevaListaCapturados'],
-        });
-
-        // si ganamos mostramos un aviso
-        if(this.state.complete){   
-
-            Swal.fire({
-              title: "¡Felicitaciones!",
-              text: "Ganaste con " + this.state.turns + " turnos.",
-              icon: "success",
-            })
-          
-           
-            console.log(this.state.nombreJugador);
-            /*
-            .then(() => {
-                window.location.reload()      
-            });
-            */
-
-        }        
-      } else {
-        // Prolog query will fail when the clicked color coincides with that in the top left cell.
+        const queryS = "flick(" + gridS + "," + fila + "," + columna + "," + color + ",Grid," + JSON.stringify(this.state.listaCapturados).replaceAll('"', "") + ",NuevaListaCapturados,CantCapturados)";
+        //console.log(queryS);
         this.setState({
-          waiting: false
+          waiting: true
+        });
+        this.pengine.query(queryS, (success, response) => {      
+          if (success) {
+              this.state.historial.push(color)
+              this.setState({
+              grid: response['Grid'],
+              turns: this.state.turns + 1,
+              waiting: false,
+              cantidadDeCapturados: response['CantCapturados'],
+              complete: response['CantCapturados']===196, // complete es Verdadero si gano
+              listaCapturados: response['NuevaListaCapturados'],
+            });
+
+            // si ganamos mostramos un aviso
+            if(this.state.complete){   
+                Swal.fire({
+                  title: "¡Felicitaciones!",
+                  text: "Ganaste con " + this.state.turns + " turnos.",
+                  icon: "success",
+                })
+                this.registrarRecord();
+                /*
+                .then(() => {
+                    window.location.reload()      
+                });
+                */
+
+            }        
+          } else {
+            // Prolog query will fail when the clicked color coincides with that in the top left cell.
+            this.setState({
+              waiting: false
+            });
+          }
         });
       }
-    });
+    }
+
+
+    registrarRecord(){    
+          const queryRecord = "newRecord(" + this.state.nombreJugador + "," + this.state.turns +", AllRecords)."
+          console.log(queryRecord)
+          this.setState({
+              waiting: true
+          });
+          this.pengine.query(queryRecord, (success, response) => {    
+            if (success) {
+                this.setState({
+                  waiting: false,
+                  records: response['AllRecords'],
+              });
+            }  });
+      console.log("Records obtenidos en la funcion: "+ this.state.records)
   }
+
+  
+  async getNombre(){
+
+          const { value: nombre } = await Swal.fire({
+            title: '¡Bienvenido a Flick Color!',
+            input: 'text',
+            inputLabel: 'Ingrese su nombre para poder registrar su puntuación',
+          })
+
+          this.setState({
+              nombreJugador: nombre
+          }); 
   }
+
 
   // funcion del origen
   origenSeleccionado(pos){
@@ -241,7 +233,7 @@ class Game extends React.Component {
           }
       });
   }
-//handleChange(event){this.setState({estrategia:event.target.value});}
+
 // boton ayuda
 handleHelp(){
 
@@ -279,7 +271,6 @@ handleHelp(){
         
         // botonAyuda( +Grid, +Origen, +ListaCapturados, +Profundidad, -Secuencia, -CantidadAdyacentes):-
         const queryS = "botonAyuda(" + gridS + ","+ origen+","+ capturados+","+ profundidad+", SecuenciaColores, NewCantidadAdyacentes)";
-        console.log(queryS);
         this.setState({
             waiting: true
         });
@@ -290,7 +281,6 @@ handleHelp(){
                     ayudaSecuenciaColores: response['SecuenciaColores'],
                     ayudaCapturados: response['NewCantidadAdyacentes'],
                 }); 
-
               Swal.close()                
               Swal.fire({
                 position: 'center',
@@ -299,7 +289,6 @@ handleHelp(){
                 showConfirmButton: false,
                 timer: 2000
               })
-                         
             } else {
                   this.setState({
                       waiting: false
@@ -307,10 +296,32 @@ handleHelp(){
               }
           });
     }
-  }
- 
+  } 
+
+  getRecords(){         
+    const queryS = "getRecords(Records)";
+    this.setState({
+      waiting: true
+    });
+    this.pengine.query(queryS, (success, response) => {               
+        if (success) {
+          this.setState({
+              records: response['Records'],
+              waiting: false,
+        })
+      }
+    })
+    console.log("los records en la función: " + this.state.records);
+}
+
+
+
 
   render() {
+
+    let records = this.state.records;
+
+
     if (this.state.grid === null) {
       return null;
     }
@@ -353,8 +364,6 @@ handleHelp(){
                       />)}
                   </div>
             </div> 
-
-
         </div>
         <Board 
             grid={this.state.grid} 
@@ -370,7 +379,34 @@ handleHelp(){
                     key={i}                    
                   />)}
               </div>
-        </div> 
+        </div>
+
+
+
+        <div className="records">
+            <table>
+              <thead>
+                <tr>
+                  {
+                    <th>Nick - Turnos</th>
+                  }
+                </tr>
+              </thead>
+              <tbody>
+                {records.slice(0, records.length).map((item, index) => {
+                  return (
+                    <tr>
+                      <td>{item[0]}</td>
+                      <td>{item[1]}</td>
+                      <td>{item[2]}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+        </div>
+
+
       </div>
     );
   }
