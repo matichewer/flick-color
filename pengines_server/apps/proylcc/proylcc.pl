@@ -1,7 +1,4 @@
-:- module(proylcc, 
-	[  
-		flick/8
-	]).
+:- module(proylcc, [flick/8, newRecord/3, getRecords/1]).
 
 :- dynamic ganador/2.
 
