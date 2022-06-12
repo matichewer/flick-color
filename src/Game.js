@@ -47,11 +47,33 @@ class Game extends React.Component {
       listaCapturados: [],
       ayudaSecuenciaColores: [],
       ayudaCapturados: 0,
+      nombreJugador: undefined
     };
     this.handleClick = this.handleClick.bind(this);
     this.origenSeleccionado = this.origenSeleccionado.bind(this);
     this.handlePengineCreate = this.handlePengineCreate.bind(this);
     this.pengine = new PengineClient(this.handlePengineCreate);
+
+
+/*
+   // if( !this.state.nombreJugador ){
+      const { value: nombre } = Swal.fire({
+        title: '¡Bienvenido a Flick Color!',
+        input: 'text',
+        inputLabel: 'Ingresa tu nombre',
+      })
+  
+    //  if (nombre) {
+     //   Swal.fire(`Tu nombre es ${nombre}`)
+      //}
+  
+      console.log(nombre);
+      this.setState({
+          nombreJugador: nombre
+      });
+      //this.state.nombreJugador = nombre;
+  //}
+  */
   }
 
   handlePengineCreate() {
@@ -102,6 +124,9 @@ class Game extends React.Component {
         })
     }
     */
+
+
+
 
 
     if (this.state.listaCapturados.length === 0) {
@@ -165,9 +190,15 @@ class Game extends React.Component {
               title: "¡Felicitaciones!",
               text: "Ganaste con " + this.state.turns + " turnos.",
               icon: "success",
-            }).then(() => {
+            })
+          
+           
+            console.log(this.state.nombreJugador);
+            /*
+            .then(() => {
                 window.location.reload()      
             });
+            */
 
         }        
       } else {
@@ -217,12 +248,30 @@ handleHelp(){
     if (!this.state.origen){
         Swal.fire({
           title: "Error",
-          text: "Primero seleccione un origen para empezar a jugar.",
           icon: "error",
+          text: "Primero seleccione un origen para empezar a jugar.",
+          showConfirmButton: false,
+          timer: 2000
         })
     }
     else{
         var profundidad = parseInt(document.getElementById("profundidad").value);
+        if (profundidad<1 || profundidad>7){
+            Swal.fire({
+              position: 'center',
+              icon: 'error',
+              title: 'Ingrese un número entre 1 y 7',
+              showConfirmButton: false,
+              timer: 2000
+            })
+            return;
+        }       
+            Swal.fire({
+              position: 'center',
+              title: 'Calculando la mejor estrategia...',
+              icon: 'info',
+              showConfirmButton: false,
+            })
 
         const gridS = JSON.stringify(this.state.grid).replaceAll('"', "");
         const origen = JSON.stringify(this.state.origen).replaceAll('"', "");
@@ -240,7 +289,17 @@ handleHelp(){
                     waiting: false,
                     ayudaSecuenciaColores: response['SecuenciaColores'],
                     ayudaCapturados: response['NewCantidadAdyacentes'],
-                });            
+                }); 
+
+              Swal.close()                
+              Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: '¡Mejor estrategia encontrada!',
+                showConfirmButton: false,
+                timer: 2000
+              })
+                         
             } else {
                   this.setState({
                       waiting: false
@@ -279,7 +338,7 @@ handleHelp(){
             </div> 
             <div className="estrategia">
               <div className="profundidadLab">Estrategia</div>
-              <input className="profundidadNum" type='number' id="profundidad" min= "1" max="30" defaultValue="1"/> 
+              <input className="profundidadNum" type='number' id="profundidad" min= "1" max="7" defaultValue="1"/> 
               <button className='BotonAyuda' onClick={() => this.handleHelp()}>Ayuda</button>
               <div className="capturadosEstrategia">{this.state.ayudaCapturados}</div>
             </div>   
