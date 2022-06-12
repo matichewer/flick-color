@@ -352,9 +352,6 @@ handleHelp(){
               <input className="profundidadNum" type='number' id="profundidad" min= "1" max="7" defaultValue="1"/> 
               <button className='BotonAyuda' onClick={() => this.handleHelp()}>Ayuda</button>
               <div className="capturadosEstrategia">{this.state.ayudaCapturados}</div>
-            </div>   
-
-            <div className="ayuda">
               <div className="ayudaLab">Mejor estrategia</div>    
                   <div className="stateAyuda">{this.state.ayudaSecuenciaColores.map((colorS,i)=>
                       <Square

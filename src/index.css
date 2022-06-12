@@ -27,7 +27,13 @@
 
 body {
   font: 14px "Century Gothic", Futura, sans-serif;
-  background-color: #b3d9d9;
+ /* background-color: #9a6cee;*/
+ /*background-color: #ee916c;*/
+ /*background-color: #e7d8a7;*/
+  background: linear-gradient(orange, pink);
+ /*background: linear-gradient(top, black, white);
+*/
+ height: 100%;
 }
 
 .game {
@@ -40,14 +46,16 @@ body {
 }
 
 .panelControl{
-  border: solid;
-  border-color: black;
-  margin-top: 20px;
+  /*border: solid;*/
+  /*border-color: black;*/
+ /* margin-top: 20px;*/
   justify-content: center;
-  height: 560px;
+  height: 660px;
 }
 
 .leftPanel {
+  border: solid;
+  border-color: black;
   display: flex;
   flex-direction: column;
   margin: 20px;
@@ -77,7 +85,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 40px;
+  margin-top: 10px;
   font-size: 20px;
   color: darkblue;
 }
@@ -97,9 +105,11 @@ body {
 }
 
 .capturados {
+  border: solid;
+  border-color: black;
   display:flex;
   align-items: center;
-  color: red;
+  color: rgb(0, 0, 0);
   flex-direction: column;
   margin: 20px;
  font-size: 20px;
@@ -144,19 +154,21 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 2rem;
+  padding: 1rem;
   position: fixed;
   left:0px;
   bottom:0px;
 }
 
 .estrategia{
+  border: solid;
+  border-color: black;
   align-items: center;
   display:flex;
   color: black;
   flex-direction: column;
   margin-top: 40px;
-  font-size: 40px;
+  font-size: 30px;
   margin: 20px;
 }
 
