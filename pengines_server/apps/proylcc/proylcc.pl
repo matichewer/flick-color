@@ -10,7 +10,6 @@ init:- absolute_file_name('ganadores.db', File, [access(write)]), db_attach(File
 */
 
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 % botonAyuda( +Grid, +Origen, +ListaCapturados, +Profundidad, -SecuenciaColores, -CantidadAdyacentes)
@@ -18,8 +17,8 @@ init:- absolute_file_name('ganadores.db', File, [access(write)]), db_attach(File
 % Grid es la grilla actual
 % Origen es la celda origen en formato [X,Y]
 % ListaCapturados es la lista actual de celdas capturadas
-% Profundidad es la profunidad estrategia de la ayuda que pide el usuario
-% SecuenciaColores es la secuencia de colores estrategia que le sugerimos al usuario
+% Profundidad es la profunidad que solicita el usuario
+% SecuenciaColores es la secuencia de colores que le sugerimos al usuario
 % CantidadAdyacentes es la cantidas de celdas capturadas luego de realizar la secuencia de colores
 %
 botonAyuda(Grid, Origen, ListaCapturados, Profundidad, SecuenciaColores, CantidadAdyacentes):-    
@@ -27,6 +26,15 @@ botonAyuda(Grid, Origen, ListaCapturados, Profundidad, SecuenciaColores, Cantida
 		mejorResultado(TodosLosResultados, R),
 		R = [_Grid,_Origen,NewListaCapturados,SecuenciaColores, _ProfInicial],
 		length(NewListaCapturados,CantidadAdyacentes).
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Utilizamos un bloque de información el cual consiste en una
+% lista 5 variables, la cual tiene el siguiente formato:
+%
+% 	[Grilla, Origen, ListaCapturados, SecuenciaColores, ProfundidadActual]
+%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -36,8 +44,8 @@ botonAyuda(Grid, Origen, ListaCapturados, Profundidad, SecuenciaColores, Cantida
 % Origen es la celda origen en formato [X,Y]
 % ListaCapturados es la lista actual de celdas capturadas
 % SecuenciaColores es la secuencia de colores que vamos a calcular
-% ProfundidadActual es el nivel por el que va recorriendo la estrategia
-% ProfundidadFija es la profunidad estrategia de la ayuda que pide el usuario
+% ProfundidadActual es el nivel en el que se encuentra éste bloque de información
+% ProfundidadFija es la profunidad que solicita el usuario
 % NewResultados es la lista de todos los resultados previo a seleccionar el mejor camino 
 %
 % Caso base: terminó de recorrer la lista
@@ -70,7 +78,7 @@ estrategia([R1|Rs],ProfundidadFija, NewResultados) :-
 % [X,Y] es la celda origen
 % ListaCapturados es la lista actual de celdas capturadas
 % SecuenciaColores es la secuencia de colores que vamos a calcular
-% ProfundidadActual es el nivel por el que va recorriendo la estrategia
+% ProfundidadActual es el nivel en el que se encuentra éste bloque de información
 % Resultado es la lista de toda la información de un nivel
 % 
 getInformacionDeNivel([Grid,[X,Y],ListaCapturados,SecuenciaColores,ProfundidadActual],Resultado):-
@@ -92,9 +100,9 @@ getInformacionDeNivel([Grid,[X,Y],ListaCapturados,SecuenciaColores,ProfundidadAc
 %
 % mejorResultado( +[MejorActual|Resultados], -MejorTotal):
 %
-% MejorActual es el primer camino de la lista tomándolo como el mejor para luego comparar con el resto
-% Resultados es el resto de los caminos que aún no comparé
-% MejorTotal es el mejor camino obtenido luego de comparar con todos los caminos
+% MejorActual es el primer bloque de información de la lista, tomándolo como el mejor
+% Resultados es el resto de los bloques de información que aún no comparé
+% MejorTotal es el mejor bloque de información obtenido luego de comparar con todos los demás
 % 
 mejorResultado([MejorActual|Resultados],MejorTotal):- mejorResultadoAux([MejorActual| Resultados], MejorActual, MejorTotal).
 
@@ -102,13 +110,12 @@ mejorResultado([MejorActual|Resultados],MejorTotal):- mejorResultadoAux([MejorAc
 %
 % mejorResultadoAux( +[Resultado|Resultados], +MejorActual, -MejorTotal)
 %
-% Resultado es el primer camino de la lista tomándolo como el mejor para luego comparar con el resto
-% Resultados es el resto de los caminos que aún no comparé
-% MejorActual es el mejor resultado en el recorrido actual
-% MejorTotal es el mejor camino obtenido luego de comparar con todos los caminos
+% Resultado es el primer bloque de información de la lista tomándolo como el mejor
+% Resultados es el resto de los bloques de información que aún no comparé
+% MejorActual es el mejor bloque de información hasta el momento
+% MejorTotal es el mejor bloque de información obtenido luego de comparar con todos los demás
 % 
 mejorResultadoAux([], MejorActual, MejorActual).
-
 mejorResultadoAux([Resultado|Resultados], MejorActual, MejorTotal):-
     	getMejorSecuencia(Resultado, MejorActual, MejorLocal), 
    		mejorResultadoAux(Resultados, MejorLocal, MejorTotal).
@@ -117,8 +124,8 @@ mejorResultadoAux([Resultado|Resultados], MejorActual, MejorTotal):-
 %
 % getMejorSecuencia(+Resultado1, +Resultado2, +Resultado)
 %
-% Resultado1 y Resultado2 son los 2 caminos a comparar
-% Resultado es el que tiene la mayor cantidad de celdas capturadas entre Resultado1 y Resultado2
+% Resultado1 y Resultado2 son los 2 bloques de información a comparar
+% Resultado es el bloque que tiene la mayor cantidad de celdas capturadas entre los otros 2
 % 
 getMejorSecuencia(Resultado1,Resultado2,Resultado1):-
     	Resultado1 = [_Grid1,_Origen1,ListaCapturados1,_SecuenciaColores1,_ProfInicial1],
@@ -306,7 +313,7 @@ getColor([X,Y], Grid, C):-
 
 
 
-	
+
 
 % el usuario no existe en la base de datos, por lo tanto registramos su puntuacion
 newRecord(Nick,NewTurnos,NewRecords):-      		
