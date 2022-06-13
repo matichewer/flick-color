@@ -52,7 +52,7 @@ class Game extends React.Component {
     this.handlePengineCreate = this.handlePengineCreate.bind(this);
     this.pengine = new PengineClient(this.handlePengineCreate);
 
-    this.getNombre();
+   // this.getNombre();
   }
 
   handlePengineCreate() {
@@ -88,20 +88,18 @@ class Game extends React.Component {
     //        [r,p,g,y,v,y,r,b,v,r,b,y,r,v],
     //        [r,b,b,v,p,y,p,r,b,g,p,y,b,r],
     //        [v,g,p,b,v,v,g,g,g,b,v,g,g,g]],r, Grid)
-    const gridS = JSON.stringify(this.state.grid).replaceAll('"', "");
+   
 
+    const gridS = JSON.stringify(this.state.grid).replaceAll('"', "");
     // si el usuario no elige celda de origen, entonces por defecto es la [0,0]
     const fila = this.state.origen ? this.state.origen[0] : 0;
     const columna = this.state.origen ? this.state.origen[1] : 0;
-  
-
 
     if (this.state.listaCapturados.length === 0) {
 
       this.setState({
         origen: [0,0]
       })
-      const gridS = JSON.stringify(this.state.grid).replaceAll('"', "");
       const querySInit = "iniciarConOrigenDefault(" + gridS + "," +color + ",NewGrid,NuevaListaCapturados,CantCapturados)";
       this.setState({
           waiting: true
@@ -141,17 +139,17 @@ class Game extends React.Component {
                   complete: response['CantCapturados']===196, // complete es Verdadero si gano
                   listaCapturados: response['NuevaListaCapturados'],
               });
-
               // si ganamos mostramos un aviso
-              if(this.state.complete){  
-                  this.registrarRecord(); 
+              if(this.state.complete){ 
                   Swal.fire({
                     title: "¡Felicitaciones!",
                     text: "Ganaste con " + this.state.turns + " turnos.",
                     icon: "success",
-                  }).then(() => {
+                  })
+                  /*.then(() => {
                       window.location.reload()      
                   });
+                  */
               }        
           } else {
             // Prolog query will fail when the clicked color coincides with that in the top left cell.
@@ -160,9 +158,68 @@ class Game extends React.Component {
             });
           }
         });
-      }
     }
+
+    this.nuevoRecord();
+  }
+
+
+// FUNCIONES PARA ADMINISTRAR LOS RECORDS:
+
+  nuevoRecord(){ 
+      //const queryS = "newRecord(" + this.state.nombreJugador + "," + this.state.turns +", AllRecords)."
+      //const queryS = "newRecord(rolo,34,AllRecords)."
+      const queryS = "hola(carlos)."
+      console.log(queryS);
+      this.setState({
+          waiting: true
+      });
+      this.pengine.query(queryS, (success, response) => {   
+          if (success) {
+              console.log("EXITO EN registrarRecord()");
+              //console.log(response['AllRecords'])
+              this.setState({
+                  waiting: false,
+              });            
+          } else {
+              console.log("ERROR EN registrarRecord()");
+              this.setState({
+                  waiting: false
+              });
+          }
+      });
+  }
+
+  getRecords(){         
+      const queryS = "getRecords(Records)";
+      this.setState({
+          waiting: true
+      });
+      this.pengine.query(queryS, (success, response) => {               
+          if (success) {
+              this.setState({
+                  records: response['Records'],
+                  waiting: false,
+            })
+          }
+      })
+  }
+
+    async getNombre(){
+        const { value: nombre } = await Swal.fire({
+            title: '¡Bienvenido a Flick Color!',
+            input: 'text',
+            inputLabel: 'Ingrese su nombre para poder registrar su puntuación',
+        })
+        this.setState({
+            nombreJugador: nombre
+        }); 
+    }
+
+
+
   
+
   // funcion del origen
   origenSeleccionado(pos){
       this.setState({
@@ -254,51 +311,6 @@ handleHelp(){
         });
     }
   } 
-
-
-  registrarRecord(){    
-    const queryRecord = "newRecord(" + this.state.nombreJugador + "," + this.state.turns +", AllRecords)."
-    console.log(queryRecord)
-    this.setState({
-        waiting: true
-    });
-    this.pengine.query(queryRecord, (success, response) => {    
-      if (success) {
-          this.setState({
-            waiting: false,
-            records: response['AllRecords'],
-        });
-      }  });
-    console.log("Records obtenidos en la funcion: "+ this.state.records)
-  }
-
-  getRecords(){         
-    const queryS = "getRecords(Records)";
-    this.setState({
-      waiting: true
-    });
-    this.pengine.query(queryS, (success, response) => {               
-        if (success) {
-          this.setState({
-              records: response['Records'],
-              waiting: false,
-        })
-      }
-    })
-    console.log("los records en la función: " + this.state.records);
-  }
-
-  async getNombre(){
-    const { value: nombre } = await Swal.fire({
-      title: '¡Bienvenido a Flick Color!',
-      input: 'text',
-      inputLabel: 'Ingrese su nombre para poder registrar su puntuación',
-    })
-    this.setState({
-        nombreJugador: nombre
-    }); 
-  }
-
 
   render() {
 
