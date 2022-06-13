@@ -141,16 +141,15 @@ class Game extends React.Component {
               });
               // si ganamos mostramos un aviso
               if(this.state.complete){ 
-                this.nuevoRecord();
+                  this.nuevoRecord();
                   Swal.fire({
                     title: "¡Felicitaciones!",
                     text: "Ganaste con " + this.state.turns + " turnos.",
                     icon: "success",
-                  })
-                  /*.then(() => {
+                  }).then(() => {
                         window.location.reload()      
                   });
-                  */
+                  
               }        
           } else {
             // Prolog query will fail when the clicked color coincides with that in the top left cell.
@@ -160,8 +159,6 @@ class Game extends React.Component {
           }
         });
     }
-
-//    this.nuevoRecord();
   }
 
 
@@ -169,21 +166,15 @@ class Game extends React.Component {
 
   nuevoRecord(){ 
       const queryS = "newRecord(" + this.state.nombreJugador + "," + this.state.turns +", AllRecords)"
-      //const queryS = "newRecord(rolo,34,AllRecords)."
-      //const queryS = "hola(carlos)"
-      console.log(queryS);
       this.setState({
           waiting: true
       });
       this.pengine.query(queryS, (success, response) => {   
           if (success) {
-              console.log("EXITO EN registrarRecord()");
-              console.log(response['AllRecords'])
               this.setState({
                   waiting: false,
               });            
           } else {
-              console.log("ERROR EN registrarRecord()");
               this.setState({
                   waiting: false
               });
@@ -216,10 +207,6 @@ class Game extends React.Component {
             nombreJugador: nombre
         }); 
     }
-
-
-
-  
 
   // funcion del origen
   origenSeleccionado(pos){
@@ -317,7 +304,6 @@ handleHelp(){
 
     let records = this.state.records;
 
-
     if (this.state.grid === null) {
       return null;
     }
@@ -373,10 +359,7 @@ handleHelp(){
                   />)}
               </div>
         </div>
-
-
-
-        <div className="records">
+          <div className="records">
             <table>
               <thead>
                 <tr>
@@ -398,9 +381,6 @@ handleHelp(){
               </tbody>
             </table>
         </div>
-
-
-
       </div>
     );
   }
