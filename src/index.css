@@ -34,8 +34,8 @@ body {
 .game {
   display: flex;
   flex-direction: row;
-  justify-content: center;
-  margin-left:15%;
+  justify-conten: center;
+  margin-left:5%;
   margin-right: 15%;
   padding-top:0rem;
 }
@@ -113,7 +113,7 @@ body {
   color: black;
   flex-direction: column;
   margin-top: 40px;
-  font-size: 40px;
+  font-size: 20px;
   margin: 20px;
   border: solid;
   border-color:black;
