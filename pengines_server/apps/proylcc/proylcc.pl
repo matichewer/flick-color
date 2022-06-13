@@ -306,11 +306,7 @@ getColor([X,Y], Grid, C):-
     nth0(X, Grid, F),
     nth0(Y, F, C). 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-% De ahora en adelante son predicados para administrar
-% la base de datos de usuarios ganadores
-%
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 % getRecords(-RecordsOrdenados)
