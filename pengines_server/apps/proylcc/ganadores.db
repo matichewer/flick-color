@@ -1,8 +1,0 @@
-created(1655119876.877775).
-assert(ganador(carlos,25)).
-assert(ganador(pedro,27)).
-assert(ganador(pepito,30)).
-retract(ganador(carlos,25)).
-assert(ganador(carlos,24)).
-assert(ganador(fulano,35)).
-assert(ganador(mauro,30)).
