@@ -52,7 +52,7 @@ class Game extends React.Component {
     this.handlePengineCreate = this.handlePengineCreate.bind(this);
     this.pengine = new PengineClient(this.handlePengineCreate);
 
-   // this.getNombre();
+    this.getNombre();
   }
 
   handlePengineCreate() {
@@ -141,6 +141,7 @@ class Game extends React.Component {
               });
               // si ganamos mostramos un aviso
               if(this.state.complete){ 
+                this.nuevoRecord();
                   Swal.fire({
                     title: "¡Felicitaciones!",
                     text: "Ganaste con " + this.state.turns + " turnos.",
@@ -160,16 +161,16 @@ class Game extends React.Component {
         });
     }
 
-    this.nuevoRecord();
+//    this.nuevoRecord();
   }
 
 
 // FUNCIONES PARA ADMINISTRAR LOS RECORDS:
 
   nuevoRecord(){ 
-      //const queryS = "newRecord(" + this.state.nombreJugador + "," + this.state.turns +", AllRecords)."
+      const queryS = "newRecord(" + this.state.nombreJugador + "," + this.state.turns +", AllRecords)"
       //const queryS = "newRecord(rolo,34,AllRecords)."
-      const queryS = "hola(carlos)."
+      //const queryS = "hola(carlos)"
       console.log(queryS);
       this.setState({
           waiting: true
@@ -177,7 +178,7 @@ class Game extends React.Component {
       this.pengine.query(queryS, (success, response) => {   
           if (success) {
               console.log("EXITO EN registrarRecord()");
-              //console.log(response['AllRecords'])
+              console.log(response['AllRecords'])
               this.setState({
                   waiting: false,
               });            
