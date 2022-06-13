@@ -1,15 +1,8 @@
 :- module(proylcc, [flick/8]).
 
-
+% El hecho ganador/2 lo usamos para guardar cada puntuacion ganadora
+% Ejemplo: ganador(mati,25).
 :- dynamic ganador/2.
-
- %las siguientes 4 lineas de codigo sirven para tener persistencia en los asserts
-
-:- use_module(library(persistency)).
-:- persistent ganador(fact1:any, fact2:any).
-:- initialization(init).
-init:- absolute_file_name('ganadores.db', File, [access(write)]), db_attach(File, []).
-
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -313,11 +306,16 @@ getColor([X,Y], Grid, C):-
     nth0(X, Grid, F),
     nth0(Y, F, C). 
 
-
-
-
-
-% obtengo una tabla con todos los records
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% De ahora en adelante son predicados para administrar
+% la base de datos de usuarios ganadores
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% getRecords(-RecordsOrdenados)
+% 
+% Obtengo una tabla con todos los records
 getRecords(RecordsOrdenados):-
     	% busco todos los ganadores
     	findall([Nick,Turnos],
@@ -326,48 +324,29 @@ getRecords(RecordsOrdenados):-
     	% ordeno los ganadores segun sus turnos (de menor a mayor)
 		sort(2, @<, RecordsDesordenados, RecordsOrdenados).
 
-
-
- %  CON PERSISTENCIA !!!
-% el usuario no existe en la base de datos, por lo tanto registramos su puntuacion
-newRecord(Nick,NewTurnos,NewRecords):-      		
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% newRecord(+Nick, +NewTurnos, -NewRecords)
+% 
+% Dado un Nombre y una Cantidad de turnos,
+% Se lo registra en la base de datos, y se retorna la nueva lista de records
+%
+% Caso 1: el usuario no existe en la base de datos, por lo tanto registramos su puntuacion
+newRecord(Nick,Turnos,NewRecords):-      		
            not(ganador(Nick,_)),           
-           assert_ganador(Nick,NewTurnos),
-    		getRecords(NewRecords),
-    	   !.
-% el usuario ya existe en la base de datos
-newRecord(Nick,NewTurnos,NewRecords):-  
-      % buscamos su puntuacion
-      ganador(Nick,OldTurnos),
-      % solo registramos su puntuacion si hizo un record
-      NewTurnos < OldTurnos,
-	  !,
-      retract_ganador(Nick,OldTurnos),
-      assert_ganador(Nick,NewTurnos),    
-   	  getRecords(NewRecords).
-% newRecord/3 siempre retorna verdadero
-newRecord(_,_,Records):- getRecords(Records).
-
-
-/*
-% SIN PERSISTENCIA !!!
-% el usuario no existe en la base de datos, por lo tanto registramos su puntuacion
-newRecord(Nick,NewTurnos,NewRecords):-      		
-           not(ganador(Nick,_)),           
-           assert(ganador(Nick,NewTurnos)),
+           assert(ganador(Nick,Turnos)),
            getRecords(NewRecords),
            !.
-% el usuario ya existe en la base de datos
-newRecord(Nick,NewTurnos,NewRecords):-  
+% Caso 2: el usuario ya existe en la base de datos
+newRecord(Nick,Turnos,NewRecords):-  
       % buscamos su puntuacion
       ganador(Nick,OldTurnos),
       % solo registramos su puntuacion si hizo un record
-      NewTurnos < OldTurnos,
+      Turnos < OldTurnos,
 	  !,
       retract(ganador(Nick,OldTurnos)),
-      assert(ganador(Nick,NewTurnos)),    
+      assert(ganador(Nick,Turnos)),    
    	  getRecords(NewRecords).
-% newRecord/3 siempre retorna verdadero
+% Caso 3: siempre retorna verdadero
 newRecord(_,_,Records):- getRecords(Records).
 
-*/
