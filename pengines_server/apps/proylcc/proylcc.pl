@@ -4,14 +4,13 @@
 :- dynamic ganador/2.
 
  %las siguientes 4 lineas de codigo sirven para tener persistencia en los asserts
- /*
+
 :- use_module(library(persistency)).
 :- persistent ganador(fact1:any, fact2:any).
 :- initialization(init).
 init:- absolute_file_name('ganadores.db', File, [access(write)]), db_attach(File, []).
-*/
 
-hola(carlos).
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -329,7 +328,7 @@ getRecords(RecordsOrdenados):-
 
 
 
-/*  CON PERSISTENCIA !!!
+ %  CON PERSISTENCIA !!!
 % el usuario no existe en la base de datos, por lo tanto registramos su puntuacion
 newRecord(Nick,NewTurnos,NewRecords):-      		
            not(ganador(Nick,_)),           
@@ -348,9 +347,9 @@ newRecord(Nick,NewTurnos,NewRecords):-
    	  getRecords(NewRecords).
 % newRecord/3 siempre retorna verdadero
 newRecord(_,_,Records):- getRecords(Records).
-*/
 
 
+/*
 % SIN PERSISTENCIA !!!
 % el usuario no existe en la base de datos, por lo tanto registramos su puntuacion
 newRecord(Nick,NewTurnos,NewRecords):-      		
@@ -371,4 +370,4 @@ newRecord(Nick,NewTurnos,NewRecords):-
 % newRecord/3 siempre retorna verdadero
 newRecord(_,_,Records):- getRecords(Records).
 
-
+*/

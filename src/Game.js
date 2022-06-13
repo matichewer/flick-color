@@ -148,7 +148,7 @@ class Game extends React.Component {
                     icon: "success",
                   })
                   /*.then(() => {
-                      window.location.reload()      
+                        window.location.reload()      
                   });
                   */
               }        
