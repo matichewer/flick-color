@@ -318,7 +318,7 @@ getRecords(RecordsOrdenados):-
                 		ganador(Nick,Turnos),
       			RecordsDesordenados),
     	% ordeno los ganadores segun sus turnos (de menor a mayor)
-		sort(2, @<, RecordsDesordenados, RecordsOrdenados).
+		sort(2, @=<, RecordsDesordenados, RecordsOrdenados).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
