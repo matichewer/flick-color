@@ -346,3 +346,5 @@ newRecord(Nick,Turnos,NewRecords):-
 % Caso 3: siempre retorna verdadero
 newRecord(_,_,Records):- getRecords(Records).
 
+
+borrarRecord(Nick,Turnos):- retract(ganador(Nick,Turnos)).
