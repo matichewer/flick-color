@@ -165,7 +165,7 @@ class Game extends React.Component {
 // FUNCIONES PARA ADMINISTRAR LOS RECORDS:
 
   nuevoRecord(){ 
-      const queryS = "newRecord(" + this.state.nombreJugador + "," + this.state.turns +", AllRecords)"
+      const queryS = "newRecord(\"" + this.state.nombreJugador + "\"," + this.state.turns +", AllRecords)"
       this.setState({
           waiting: true
       });
