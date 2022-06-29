@@ -77,18 +77,18 @@ estrategia([R1|Rs],ProfundidadFija, NewResultados) :-
 % Resultado es la lista de toda la información de un nivel
 % 
 getInformacionDeNivel([Grid,[X,Y],ListaCapturados,SecuenciaColores,ProfundidadActual],Resultado):-
-    		NewProfundidad is ProfundidadActual+1,
-    		getColor([X,Y],Grid,ColorActual),
-    		delete([r,v,p,g,y,b],ColorActual,ListaColores), 
-        	length(ListaCapturados,CantidadCapturados),  
-    		
-    		% Obtenemos todos los resultados del nivel guardandolo en Resultado
-			findall([NewGrid,[X,Y],NewListaCapturados,NewSecuenciaColores,NewProfundidad], (
-                 		member(Color,ListaColores),
-     			 		flick(Grid,X,Y,Color,NewGrid,ListaCapturados,NewListaCapturados,NewCantidadCapturados),
-        		 		NewCantidadCapturados > CantidadCapturados,
-                        append(SecuenciaColores, [Color], NewSecuenciaColores)
-        	), Resultado).
+		NewProfundidad is ProfundidadActual+1,
+		getColor([X,Y],Grid,ColorActual),
+		delete([r,v,p,g,y,b],ColorActual,ListaColores), 
+		length(ListaCapturados,CantidadCapturados),  
+
+		% Obtenemos todos los resultados del nivel guardandolo en Resultado
+		findall([NewGrid,[X,Y],NewListaCapturados,NewSecuenciaColores,NewProfundidad], (
+				member(Color,ListaColores),
+				flick(Grid,X,Y,Color,NewGrid,ListaCapturados,NewListaCapturados,NewCantidadCapturados),
+				NewCantidadCapturados > CantidadCapturados,
+				append(SecuenciaColores, [Color], NewSecuenciaColores)
+		), Resultado).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -112,8 +112,8 @@ mejorResultado([MejorActual|Resultados],MejorTotal):- mejorResultadoAux([MejorAc
 % 
 mejorResultadoAux([], MejorActual, MejorActual).
 mejorResultadoAux([Resultado|Resultados], MejorActual, MejorTotal):-
-    	getMejorSecuencia(Resultado, MejorActual, MejorLocal), 
-   		mejorResultadoAux(Resultados, MejorLocal, MejorTotal).
+		getMejorSecuencia(Resultado, MejorActual, MejorLocal), 
+		mejorResultadoAux(Resultados, MejorLocal, MejorTotal).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -123,14 +123,14 @@ mejorResultadoAux([Resultado|Resultados], MejorActual, MejorTotal):-
 % Resultado es el bloque que tiene la mayor cantidad de celdas capturadas entre los otros 2
 % 
 getMejorSecuencia(Resultado1,Resultado2,Resultado1):-
-    	Resultado1 = [_Grid1,_Origen1,ListaCapturados1,_SecuenciaColores1,_ProfInicial1],
-    	Resultado2 = [_Grid2,_Origen2,ListaCapturados2,_SecuenciaColores2,_ProfInicial2],
-    	length(ListaCapturados1, Tamanio1),
-    	length(ListaCapturados2, Tamanio2),
-    	Tamanio1 > Tamanio2,
-    	!.
+		Resultado1 = [_Grid1,_Origen1,ListaCapturados1,_SecuenciaColores1,_ProfInicial1],
+		Resultado2 = [_Grid2,_Origen2,ListaCapturados2,_SecuenciaColores2,_ProfInicial2],
+		length(ListaCapturados1, Tamanio1),
+		length(ListaCapturados2, Tamanio2),
+		Tamanio1 > Tamanio2,
+		!.
 getMejorSecuencia(_Resultado1,Resultado2,Resultado2).    	
- 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 %iniciarConOrigenDefault(+Grid, +Color, -NewGrid, -NewListaCapturados, -CantidadCapturados):-
@@ -176,18 +176,18 @@ iniciarConOrigenSeleccionado(Grid,X,Y,Color,NewListaCapturados,CantidadCapturado
 % En X,Y recibe las coordenadas de origen para el inicio del juego
 flick(Grid,X,Y,Color,NewGrid,ListaCapturados,NewListaCapturados,CantidadCapturados):-
 
-			% Obtengo el color de la celda origen, y si es igual retorno falso
-    		getColor([X,Y],Grid,C),
-        	C \= Color,
+		% Obtengo el color de la celda origen, y si es igual retorno falso
+		getColor([X,Y],Grid,C),
+		C \= Color,
 
-			% Pinto las celdas que ya tenia capturadas
-    		pintarCapturados(Grid,ListaCapturados,Color,NewGrid),
+		% Pinto las celdas que ya tenia capturadas
+		pintarCapturados(Grid,ListaCapturados,Color,NewGrid),
 
-			% Obtengo la nueva lista de celdas capturadas
-    		adyCStar([X,Y],NewGrid,NewListaCapturados),
+		% Obtengo la nueva lista de celdas capturadas
+		adyCStar([X,Y],NewGrid,NewListaCapturados),
 
-			% Calculo la cantidad de celdas capturadas
-    		length(NewListaCapturados,CantidadCapturados).
+		% Calculo la cantidad de celdas capturadas
+		length(NewListaCapturados,CantidadCapturados).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -221,11 +221,11 @@ adyCStarSpread([], Vis, _Grid, Vis).
 adyCStarSpread(Pend, Vis, Grid, Res):-
     Pend = [P|Ps],
     findall(A, 
-	        (
-    	        adyC(P, Grid, A),
-        	    not(member(A, Pend)),
-            	not(member(A, Vis))
-	        ), 
+			(
+				adyC(P, Grid, A),
+				not(member(A, Pend)),
+				not(member(A, Vis))
+			), 
             AdyCP),
     append(AdyCP, Ps, NPend),
     adyCStarSpread(NPend, [P|Vis], Grid, Res).
@@ -313,11 +313,11 @@ getColor([X,Y], Grid, C):-
 % 
 % Obtengo una tabla con todos los records
 getRecords(RecordsOrdenados):-
-    	% busco todos los ganadores
-    	findall([Nick,Turnos],
-                		ganador(Nick,Turnos),
-      			RecordsDesordenados),
-    	% ordeno los ganadores segun sus turnos (de menor a mayor)
+		% busco todos los ganadores
+		findall([Nick,Turnos],
+						ganador(Nick,Turnos),
+				RecordsDesordenados),
+		% ordeno los ganadores segun sus turnos (de menor a mayor)
 		sort(2, @=<, RecordsDesordenados, RecordsOrdenados).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -329,22 +329,52 @@ getRecords(RecordsOrdenados):-
 %
 % Caso 1: el usuario no existe en la base de datos, por lo tanto registramos su puntuacion
 newRecord(Nick,Turnos,NewRecords):-      		
-           not(ganador(Nick,_)),           
-           assert(ganador(Nick,Turnos)),
-           getRecords(NewRecords),
-           !.
+		not(ganador(Nick,_)),           
+		assert(ganador(Nick,Turnos)),
+		getRecords(NewRecords),
+		!.
 % Caso 2: el usuario ya existe en la base de datos
 newRecord(Nick,Turnos,NewRecords):-  
-      % buscamos su puntuacion
-      ganador(Nick,OldTurnos),
-      % solo registramos su puntuacion si hizo un record
-      Turnos < OldTurnos,
-	  !,
-      retract(ganador(Nick,OldTurnos)),
-      assert(ganador(Nick,Turnos)),    
-   	  getRecords(NewRecords).
+		% buscamos su puntuacion
+		ganador(Nick,OldTurnos),
+		% solo registramos su puntuacion si hizo un record
+		Turnos < OldTurnos,
+		!,
+		retract(ganador(Nick,OldTurnos)),
+		assert(ganador(Nick,Turnos)),    
+		getRecords(NewRecords).
 % Caso 3: siempre retorna verdadero
 newRecord(_,_,Records):- getRecords(Records).
 
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Predicados extras para administrar los records
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 borrarRecord(Nick,Turnos):- retract(ganador(Nick,Turnos)).
+
+backup:-
+		open('apps/proylcc/backup.txt',write,File),
+		getRecords(Records),
+		escribirPrimeraLinea(File,Records,RecordsRestantes),
+		escribirTodas(File,RecordsRestantes),
+		write(File,'.'),
+		close(File). 
+
+escribirPrimeraLinea(_File,[],[]):-!.
+escribirPrimeraLinea(File,[[Nick,Turnos]|Records], Records):-
+		write(File,'proylcc:newRecord("'),
+		write(File,Nick),
+		write(File,'",'),
+		write(File,Turnos),
+		write(File,',_)').
+
+escribirTodas(_File,[]):-!.
+escribirTodas(File,[[Nick,Turnos]|Records]):-
+		writeln(File,','),
+		write(File,'proylcc:newRecord("'),
+		write(File,Nick),
+		write(File,'",'),
+		write(File,Turnos),
+		write(File,',_)'),
+		escribirTodas(File,Records).
