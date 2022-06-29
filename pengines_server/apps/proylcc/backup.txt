@@ -1,0 +1,2 @@
+proylcc:newRecord("bbb",10,_),
+proylcc:newRecord("mati",20,_).
