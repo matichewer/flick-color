@@ -1,0 +1,18 @@
+[Unit]
+Description= Servicio que inicia FlickColor servidor React
+PartOf=master.service
+After=master.service network.target
+Requires=network.target
+Wants=flick-color-prolog.service
+
+[Service]
+User=wecher
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/tmux new -d -s flick-color-react
+ExecStartPost=/usr/bin/tmux send-keys -t flick-color-react "cd /home/wecher/Git/flick-color/" Enter "npm start" Enter
+ExecStop=/usr/bin/tmux send-keys -t flick-color-react "C-c" "exit" Enter
+
+[Install]
+WantedBy=multi-user.target
+

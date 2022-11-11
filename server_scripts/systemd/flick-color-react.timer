@@ -1,0 +1,10 @@
+[Unit]
+Description= Timer para servicio que inicia FlickColor (servidor React)
+
+[Timer]
+Unit=flick-color-react.service
+OnBootSec=5min
+
+[Install]
+WantedBy=timers.target
+
