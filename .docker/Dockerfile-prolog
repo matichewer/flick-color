@@ -1,0 +1,11 @@
+# Imagen base
+FROM swipl:stable
+
+# Copiar archivos del proyecto al contenedor
+COPY pengines_server /app/pengines_server
+
+# Establecer el directorio de trabajo
+WORKDIR /app/pengines_server
+
+# Ejecutar el servidor de Prolog
+ENTRYPOINT ["swipl", "run.pl"]

@@ -1,0 +1,13 @@
+# Imagen base
+FROM node:14
+
+# Copiar archivos del proyecto al contenedor
+WORKDIR /app
+COPY . /app
+
+# Instalar dependencias y compilar el proyecto
+RUN npm install
+
+# Comando para ejecutar el servidor de Node
+CMD ["npm", "start"]
+
