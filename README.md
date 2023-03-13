@@ -44,3 +44,23 @@ localmente, en la carpeta `node_modules`.
 - Abrir [http://localhost:3000](http://localhost:3000) para ver la aplicación en el browser.
 
 - La página se refresca automáticamente cuando cambia el código.
+
+
+---
+
+## Docker (experimental)
+
+**Comandos utiles:** (todos en la raiz del proyecto)
+
+- Para NodeJS
+  - docker build . -t flick-node -f .docker/Dockerfile-node
+  - docker run --name flick-node -p 3001:3000 flick-node   
+  
+- Para Prolog
+  - docker build . -t flick-prolog -f .docker/Dockerfile-prolog
+  - docker run --name flick-prolog -it -p 3031:3030 flick-prolog
+  
+- Para ambos
+  - docker-compose up 
+  - docker-compose up -d # para ejecutarlo en segundo plano
+  
