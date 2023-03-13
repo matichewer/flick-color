@@ -48,7 +48,7 @@ localmente, en la carpeta `node_modules`.
 
 ---
 
-## Docker (experimental)
+### Docker (experimental)
 
 **Comandos utiles:** (todos en la raiz del proyecto)
 
@@ -64,3 +64,9 @@ localmente, en la carpeta `node_modules`.
   - docker-compose up 
   - docker-compose up -d # para ejecutarlo en segundo plano
   
+  ---
+  
+  ### Tip en caso de querer cambiar el nombre de la pagina web:
+  
+  Debemos editar el archivo src/PengineClient.js en la linea 13.
+
