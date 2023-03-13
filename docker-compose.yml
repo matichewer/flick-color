@@ -1,0 +1,17 @@
+version: '1.0'
+services:
+  flick-node:
+    build:
+      context: .
+      dockerfile: Dockerfile-node
+    ports:
+      - "3001:3000"
+  flick-prolog:
+    build:
+      context: .
+      dockerfile: Dockerfile-prolog
+    ports:
+      - "3031:3030"
+    stdin_open: true
+    tty: true
+
