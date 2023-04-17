@@ -1,6 +1,4 @@
-# Imagen base
-FROM swipl:stable
-
+FROM arm32v7/swipl:8.2.2
 # Copiar archivos del proyecto al contenedor
 COPY pengines_server /app/pengines_server
 
@@ -9,3 +7,4 @@ WORKDIR /app/pengines_server
 
 # Ejecutar el servidor de Prolog
 ENTRYPOINT ["swipl", "run.pl"]
+
