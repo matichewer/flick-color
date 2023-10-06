@@ -10,7 +10,7 @@ class PengineClient {
         this.query = this.query.bind(this);
         this.handleSuccess = this.handleSuccess.bind(this);
         this.pengine = new window.Pengine({
-            server: "https://flickcolor.ddns.net:443/pengine",
+            server: "https://flickcolor.chewer.net:443/pengine",
             application: "proylcc",
             oncreate: handleCreate,
             onsuccess: this.handleSuccess,
