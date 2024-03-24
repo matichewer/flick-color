@@ -1,13 +1,7 @@
-# Imagen base
-FROM node:14
-
-# Copiar archivos del proyecto al contenedor
+FROM node:16
 WORKDIR /app
-COPY . /app
-
-# Instalar dependencias y compilar el proyecto
+COPY package*.json ./
 RUN npm install
-
-# Comando para ejecutar el servidor de Node
-CMD ["npm", "start"]
+COPY . .
+CMD ["npm", "run", "build"]
 

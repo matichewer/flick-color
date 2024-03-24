@@ -1,17 +1,24 @@
 version: '2.3'
 services:
-  flick-node:
+  
+  react:
     build:
       context: .
       dockerfile: Dockerfile-node
-    ports:
-      - "3001:3000"
-  flick-prolog:
+    image: flick-color-react
+    container_name: flick-color-react
+    volumes:
+      - ./build:/app/build
+    user: 1000:1000
+  
+  prolog:
     build:
       context: .
       dockerfile: Dockerfile-prolog
+    image: flick-color-prolog
+    container_name: flick-color-prolog
     ports:
       - "3031:3030"
     stdin_open: true
     tty: true
-
+    restart: unless-stopped
